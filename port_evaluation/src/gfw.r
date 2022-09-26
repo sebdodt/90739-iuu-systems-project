@@ -45,7 +45,7 @@ encounter <- get_event(
 
 
 ## downloading port visits for carriers/reefers
-vessels <- carrier$id %>%
+vessels <- fishers$id %>%
     unique()
 
 get_port_visits <- function(vessels_string) {
@@ -87,9 +87,11 @@ recursive_check_func <- function(vessels, divisor) {
     return(df)
 }
 
-carrier_ports <- recursive_check_func(vessels, length(vessels))
-saveRDS(carrier_ports, file = "port_evaluation/data/carrier_port_visit.RDS")
+fishing_ports <- recursive_check_func(vessels, length(vessels))
+saveRDS(fishing_ports, file = "port_evaluation/data/fishing_port_visit.RDS")
 
+# carrier_ports <- recursive_check_func(vessels, length(vessels))
+# saveRDS(carrier_ports, file = "port_evaluation/data/carrier_port_visit.RDS")
 
 
 port_visit <- get_event(

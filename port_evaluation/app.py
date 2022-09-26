@@ -2,7 +2,6 @@ import subprocess
 res = subprocess.call(['open', 'port_evaluation/src/run_src.r'])
 print(res)
 
-# run_max.py
 import subprocess
 
 # Define command and arguments
