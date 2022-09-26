@@ -134,3 +134,9 @@ dmypy.json
 
 # Seb
 seb_readme.md
+
+# Data
+*data/
+
+# R 
+*Rapp.history
