@@ -1,5 +1,5 @@
-load_RDS_data <- function() {
-    folder <- "port_evaluation/data/orig"
+load_RDS_data <- function(subfolder = "orig") {
+    folder <- paste0("port_evaluation/data/", subfolder)
     file_names <- list.files(path = folder, pattern = ".RDS")
 
     datalist <- list()
