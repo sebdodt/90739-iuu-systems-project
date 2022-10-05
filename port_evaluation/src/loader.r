@@ -10,3 +10,15 @@ load_RDS_data <- function(subfolder = "orig") {
     }
     return(datalist)
 }
+
+load_csv_data <- function(subfolder = "input") {
+    folder <- paste0("port_evaluation/data/", subfolder)
+    file_names <- list.files(path = folder, pattern = ".csv")
+    datalist <- list()
+    for (file in file_names) {
+        path <- paste(folder, file, sep = "/")
+        variable_name <- substring(file, 1, nchar(file) - 4)
+        datalist[[variable_name]] <- read.csv(path)
+    }
+    return(datalist)
+}
