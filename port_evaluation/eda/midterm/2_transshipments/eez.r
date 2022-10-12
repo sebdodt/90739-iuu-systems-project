@@ -1,0 +1,5 @@
+# install.packages("mregions")
+library("mregions")
+res1 <- mr_records_by_type(type = "EEZ")
+View(res1)
+write.csv(res1,"port_evaluation/data/input/EEZ/eez.csv", row.names = FALSE)
