@@ -1,12 +1,17 @@
 
+## importing functions
+from src.gfw import run_gfw
+from src.seavision import run_seavision
 
 
-data = load_data()
+## importing data
+carriers, loitering, encounters, port_visits = run_gfw.run_gfw()
+carriers_sv_info = run_seavision.get_info(carriers)
+carriers_sv_history = run_seavision.get_history(carriers)
 
 
-## Seavision
-SV_data = get_seavision_data(data['mmsi'])
+## creating variables
 
 
-## combine data
-final_data = combine_data(data,SV_data)
+
+## returning output
