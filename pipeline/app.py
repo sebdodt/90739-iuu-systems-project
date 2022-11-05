@@ -2,7 +2,7 @@
 ## importing functions
 from src.gfw import run_gfw
 from src.seavision import run_seavision
-from etl.activity import meetings, perc_filled, port, severity
+from etl.activity import meetings, perc_filled, severity
 from etl.info import owner, ship
 from etl.location import distance, dod_zone, eez, port, rfmo
 from output import export
