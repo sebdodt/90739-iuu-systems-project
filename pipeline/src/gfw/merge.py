@@ -24,4 +24,4 @@ def merge_local_and_api(
     ###     carriers['mmsi'] will be used to call data from SeaVision later.
 
 
-    return carriers, loitering, encounters, port_visits
+    return carriers_new, loitering, encounters, port_visits

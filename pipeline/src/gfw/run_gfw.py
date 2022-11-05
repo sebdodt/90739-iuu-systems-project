@@ -12,7 +12,6 @@ def run_gfw():
     ## call new data from api
     print(" > Importing API data")
     carriers_new, loitering_new, encounters_new, port_visits_new = api.call_api()
-    print(carriers_new)
 
     ## merge _data
     print(" > Merging local and API data...")
