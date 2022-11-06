@@ -257,5 +257,6 @@ data[['loitering']] <- data[['loitering']] %>%
 	unnest_wider(distances) %>%
 	unnest_wider(event_info)
 
-
+print(" > Saving data to 'pipeline/data/api/api_data.xlsx'...")
 openxlsx::write.xlsx(data, "pipeline/data/api/api_data.xlsx")
+print(" > Done.")
