@@ -1,12 +1,13 @@
-
-# Downloading data from Global Fishing Watch API
-
 ## libraries
 lib <- c("devtools",
     "tidyr",
     "tidyverse",
     "openxlsx",
-    "dotenv")
+    "dotenv",
+    "tibble",
+    "dplyr",
+    "rlang",
+    "broom")
     
 lib_na <- lib[!(lib %in% installed.packages()[, "Package"])]
 if (length(lib_na)) install.packages(lib_na)
@@ -23,7 +24,7 @@ GFW_TOKEN <- "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtpZEtleSJ9.eyJkYXRhI
 
 ## downloading vessel data
 print("Downloading carrier info...")
-carrier <- get_vessel_info(
+carrier <- gfwr::get_vessel_info(
     query = "lastTransmissionDate > '1990-01-01'",
     search_type = "advanced",
     dataset = "carrier_vessel",
@@ -40,13 +41,13 @@ carrier <- get_vessel_info(
 
 ## downloading event data
 print("Downloading loiterings...")
-loitering <- get_event(
+loitering <- gfwr::get_event(
     event_type = 'loitering',
     key = GFW_TOKEN
     )
 
 print("Downloading encounters...")
-encounter <- get_event(
+encounter <- gfwr::get_event(
     event_type = 'encounter',
     key = GFW_TOKEN
     )
@@ -58,7 +59,7 @@ vessels <- carrier$id %>%
 
 print("Downloading port visits...")
 get_port_visits <- function(vessels_string) {
-    port_visit <- get_event(
+    port_visit <- gfwr::get_event(
         event_type = 'port_visit',
         vessel = vessels_string,
         key = GFW_TOKEN
@@ -116,21 +117,146 @@ carrier_ports <- recursive_check_func(vessels, length(vessels))
 #     )
 
 
-## saving data
-saveRDS(carrier, file = "pipeline/data/api/carriers.RDS")
-# saveRDS(fishers, file = "port_evaluation/data/fishers.RDS")
-saveRDS(loitering, file = "pipeline/data/api/loitering.RDS")
-saveRDS(encounter, file = "pipeline/data/api/encounter.RDS")
-saveRDS(carrier_ports, file = "pipeline/data/api/carrier_port_visit.RDS")
-# saveRDS(fishing, file = "port_evaluation/data/fishing.RDS")
+# ## saving data
+# saveRDS(carrier, file = "pipeline/data/api/carriers.RDS")
+# # saveRDS(fishers, file = "port_evaluation/data/fishers.RDS")
+# saveRDS(loitering, file = "pipeline/data/api/loitering.RDS")
+# saveRDS(encounter, file = "pipeline/data/api/encounter.RDS")
+# saveRDS(carrier_ports, file = "pipeline/data/api/carrier_port_visit.RDS")
+# # saveRDS(fishing, file = "port_evaluation/data/fishing.RDS")
 
 
 
-# writing data
+# merging data
 data <- list(
     "carriers" = carrier,
     "encounter" = encounter,
     "loitering" = loitering,
-    "carrier_ports" = carrier_ports
+    "carrier_port_visit" = carrier_ports
 )
+
+
+# carrier_port_visit
+print(" > Processing port visits...")
+data[['carrier_port_visit']] <- data[['carrier_port_visit']] %>%
+	rename(
+		event_id = id,
+		event_type = type,
+		event_start = start,
+		event_end = end,
+		event_lat = lat,
+		event_lon = lon
+	) %>%
+	unnest_wider(vessel) %>%
+	rename(
+		vessel_id = id,
+		vessel_flag = flag,
+		vessel_name = name,
+		vessel_type = type,
+		vessel_ssvid = ssvid
+	) %>%
+	unnest_wider(regions) %>%
+	unnest_wider(distances) %>%
+	unnest_wider(event_info) %>%
+	unnest_wider(startAnchorage) %>%
+	unnest_wider(intermediateAnchorage, names_repair = tidyr_legacy) %>%
+	unnest_wider(endAnchorage, names_repair = tidyr_legacy)
+
+
+# carriers 
+print(" > Processing carriers...")
+data[['carriers']] <- data[['carriers']] 
+
+
+# encounter
+print(" > Processing encounters...")
+data[['encounter']] <- data[['encounter']]  %>%
+	rename(
+		event_id = id,
+		event_type = type,
+		event_start = start,
+		event_end = end,
+		event_lat = lat,
+		event_lon = lon
+	) %>%
+	unnest_wider(vessel) %>%
+	rename(
+		vessel1_id = id,
+		vessel1_flag = flag,
+		vessel1_name = name,
+		vessel1_type = type,
+		vessel1_ssvid = ssvid
+	) %>%
+	unnest_wider(regions) %>%
+	unnest_wider(distances) %>%
+	unnest_wider(event_info) %>%
+    # unnest_wider(encounter) %>%
+    rename(encounter_type = type) %>%
+    unnest_wider(vessel) %>%
+	rename(
+		vessel2_id = id,
+		vessel2_flag = flag,
+		vessel2_name = name,
+		vessel2_type = type,
+		vessel2_ssvid = ssvid
+	) 
+
+
+# # fishers
+# data[['fishers']] %>%
+#     saveRDS("port_evaluation/data/proc/fishers.RDS")
+
+
+# # fishing port visits
+# data[['fishing_port_visit']] %>%
+# 	rename(
+# 		event_id = id,
+# 		event_type = type,
+# 		event_start = start,
+# 		event_end = end,
+# 		event_lat = lat,
+# 		event_lon = lon
+# 	) %>%
+#     unnest_wider(regions) %>%
+# 	unnest_wider(distances) %>%
+# 	unnest_wider(vessel) %>%
+#     rename(
+# 		vessel_id = id,
+# 		vessel_flag = flag,
+# 		vessel_name = name,
+# 		vessel_type = type,
+# 		vessel_ssvid = ssvid
+# 	) %>%
+#     unnest_wider(event_info) %>%
+#     unnest_wider(port_visit) %>%
+#     unnest_wider(startAnchorage) %>%
+# 	unnest_wider(intermediateAnchorage, names_repair = tidyr_legacy) %>%
+# 	unnest_wider(endAnchorage, names_repair = tidyr_legacy) %>%
+#     saveRDS("port_evaluation/data/proc/fishing_port_visit.RDS")
+
+
+# loitering
+print(" > Processing loitering...")
+data[['loitering']] <- data[['loitering']] %>%
+	rename(
+		event_id = id,
+		event_type = type,
+		event_start = start,
+		event_end = end,
+		event_lat = lat,
+		event_lon = lon
+	) %>%
+	unnest_wider(vessel) %>%
+	rename(
+		vessel_id = id,
+		vessel_name = name,
+		vessel_type = type,
+		vessel_ssvid = ssvid
+	) %>%
+	unnest_wider(regions) %>%
+	unnest_wider(distances) %>%
+	unnest_wider(event_info)
+
+print(" > Saving data to 'pipeline/data/api/api_data.xlsx'...")
 openxlsx::write.xlsx(data, "pipeline/data/api/api_data.xlsx")
+print(" > Done.")
