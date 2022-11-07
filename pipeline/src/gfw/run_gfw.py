@@ -1,5 +1,5 @@
 import pandas as pd
-from src.gfw import api, merge
+import api, merge
 
 def run_gfw():
 
@@ -20,3 +20,16 @@ def run_gfw():
 
 
     return carriers, loitering, encounters, port_visits
+
+
+if __name__ == "__main__":
+    print(" > Importing local data...")
+    loitering = pd.read_csv('pipeline/data/local/loitering.csv')
+    encounters = pd.read_csv('pipeline/data/local/encounter.csv')
+    port_visits = pd.read_csv('pipeline/data/local/port.csv')
+
+    ## call new data from api
+    print(" > Importing API data")
+    carriers_new, loitering_new, encounters_new, port_visits_new = api.call_api()
+    print(loitering.columns)
+    print(loitering_new.columns)
