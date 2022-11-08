@@ -18,8 +18,10 @@ carriers_sv_history = run_seavision.get_history(carriers)
 # ...
 
 ### location specific
-output = port.at_port()
-output = eez.in_eez()
+output = carriers[['mmsi', 'imo']]
+output = port.at_port(output)
+output = eez.in_eez(output)
+output = rfmo.in_rfmo(output)
 # ...
 
 ### activity
