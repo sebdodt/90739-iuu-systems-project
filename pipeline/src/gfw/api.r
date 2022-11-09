@@ -97,7 +97,7 @@ recursive_check_func <- function(vessels, bins) {
 
 # fishing_ports <- recursive_check_func(vessels, length(vessels))
 
-carrier_ports <- recursive_check_func(vessels, 1)
+carrier_ports <- recursive_check_func(vessels, 20)
 # saveRDS(carrier_ports, file = "port_evaluation/data/carrier_port_visit.RDS")
 
 # print("Downloading port visits (version 2)...")
