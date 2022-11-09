@@ -60,10 +60,10 @@ def merge_local_and_api(
     encounter2['end'] = pd.to_datetime(encounters['end'].str[:-4])
     # (encounter['encounter.encountered_vessel.id'].isin(encounter2['encounter.encountered_vessel.id'])).sum()
     # (encounter['vessel.id'].isin(encounter2['encounter.encountered_vessel.id'])).sum()
-
-    dfdf = encounter[~((encounter['start'].isin(encounter2['start'])) & (encounter['vessel.id'].isin(encounter2['vessel.id'])) & (encounter['encounter.encountered_vessel.id'].isin(encounter2['encounter.encountered_vessel.id'])))]
-    dfdf = dfdf[~((dfdf['start'].isin(encounter2['start'])) & (dfdf['vessel.id'].isin(encounter2['encounter.encountered_vessel.id'])) & (dfdf['vessel.id'].isin(encounter2['encounter.encountered_vessel.id'])))]
-    # dfdf['id'].count()
+    encounter['judgeid'] = encounter['start'].astype(str) + encounter['vessel.id'] + encounter['encounter.encountered_vessel.id']
+    encounter2['judgeid'] = encounter2['start'].astype(str) + encounter2['vessel.id'] + encounter2['encounter.encountered_vessel.id']
+    dfdf = encounter[~encounter['judgeid'].isin(encounter2['judgeid'])]
+    dfdf = dfdf.drop(['judgeid'], axis=1)
     frames = [encounter2,dfdf]
 
     encounter_result = pd.concat(frames)
@@ -72,7 +72,7 @@ def merge_local_and_api(
     ## merge port_visits
     print(' > Now updating port_visits')
     port_visits_new = port_visits_new.drop_duplicates(subset=['event_id'])
-    port_visits[['id', 'type', 'start', 'end', 'lat', 'lon', 'vessel.id', 'vessel.type',
+    port_visits = port_visits[['id', 'type', 'start', 'end', 'lat', 'lon', 'vessel.id', 'vessel.type',
        'vessel.mmsi', 'vessel.name', 'vessel.flag', 'port.lat', 'port.lon',
        'port.country', 'port.name']]
     port_visits.columns = ['event_id', 'event_type', 'event_start', 'event_end', 'event_lat',

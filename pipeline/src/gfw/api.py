@@ -7,6 +7,6 @@ def call_api():
     path = 'pipeline/data/api/api_data.xlsx'
     xls = pd.ExcelFile(path)
     dfList = []
-    for sheet in ['carriers', 'encounter', 'loitering', 'carrier_ports']:
+    for sheet in ['carriers', 'encounter', 'loitering', 'carrier_port_visit']:
         dfList.append(pd.read_excel(path, sheet_name=sheet))
     return dfList
