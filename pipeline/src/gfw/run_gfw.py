@@ -1,5 +1,5 @@
 import pandas as pd
-import api, merge
+from src.gfw import api, merge
 
 def run_gfw():
 

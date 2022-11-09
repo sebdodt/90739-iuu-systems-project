@@ -7,4 +7,5 @@ def export_data(output):
 
     In the future, a dashboard could be plugged in here.
     '''
+    print(output.head())
     pass
