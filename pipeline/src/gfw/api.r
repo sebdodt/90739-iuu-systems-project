@@ -68,12 +68,10 @@ get_port_visits <- function(vessels_string) {
     return(port_visit)
 }
 
-port_visit_func <- function(vessels, divisor) {
-    bins <- ceiling(length(vessels) / divisor)
-    print(paste0(bins, " bins"))
+port_visit_func <- function(vessels, bins) {
     for (i in seq_len(bins)) {
-        from <- i + (100 * (i - 1))
-        to <- min(i * 100, length(vessels))
+        from <- floor((i-1)/bins * length(vessels))
+        to <- ceiling(i/bins * length(vessels))
         vessels_string <- paste0(
             vessels[from:to],
             collapse = ",")
@@ -87,27 +85,26 @@ port_visit_func <- function(vessels, divisor) {
     return(df)
 }
 
-recursive_check_func <- function(vessels, divisor) {
-    df <- tryCatch(port_visit_func(vessels, divisor),
+recursive_check_func <- function(vessels, bins) {
+    df <- tryCatch(port_visit_func(vessels, bins),
         error = function(e) {
-            print(paste0("Divisor ", divisor, " was too large."))
-            recursive_check_func(vessels, divisor * 1.1)
+            print(paste0(bins, " bins were too few."))
+            recursive_check_func(vessels, bins + 1)
         }
     )
     return(df)
 }
 
 # fishing_ports <- recursive_check_func(vessels, length(vessels))
-# saveRDS(fishing_ports, file = "port_evaluation/data/fishing_port_visit.RDS")
 
-carrier_ports <- recursive_check_func(vessels, length(vessels))
+carrier_ports <- recursive_check_func(vessels, 1)
 # saveRDS(carrier_ports, file = "port_evaluation/data/carrier_port_visit.RDS")
 
 # print("Downloading port visits (version 2)...")
 # vessels_string <- paste0(vessels,collapse = ",")
-# port_visit <- get_event(
+# port_visit <- gfwr::get_event(
 #     event_type = 'port_visit',
-#     vessel = vessels_string,
+#     # vessel = vessels_string,
 #     key = GFW_TOKEN
 #     )
 
