@@ -11,11 +11,21 @@ def merge_local_and_api(
 
     ## merge loitering
     print(' > Now updating loitering')
-    loitering_new.columns = ['id', 'type', 'start', 'end', 'lat', 'lon','mpa', 'eez', 'regions.rfmo','fao', 'major_fao', 'eez12nm',
-       'boundingBox', 'startDistanceFromShoreKm', 'endDistanceFromShoreKm',
-       'startDistanceFromPortKm', 'endDistanceFromPortKm','vessel.id','vessel.flag','vessel.name','vessel.type','vessel.mmsi',
-                     'totalTimeHours',
-       'totalDistanceKm', 'averageSpeedKnots', 'averageDistanceFromShoreKm']
+    loitering_new = loitering_new.rename({
+    'event_id': 'id',
+    'event_type': 'type',
+    'event_start': 'start',
+    'event_end': 'end',
+    'event_lat': 'lat',
+    'event_lon': 'lon',
+    'rfmo': 'regions.rfmo',
+    'vessel_id': 'vessel.id',
+    'vessel_flag': 'vessel.flag',
+    'vessel_name': 'vessel.name',
+    'vessel_type': 'vessel.type',
+    'vessel_ssvid': 'vessel.mmsi',
+    },
+    axis = 1)
     frames3 = [loitering,loitering_new[~loitering_new['id'].isin(loitering['id'])]]
 
     loitering_result = pd.concat(frames3)
@@ -23,12 +33,26 @@ def merge_local_and_api(
 
     ## merge encounters
     print(' > Now updating encounters')
-    encounters_new.columns = ['id', 'type', 'start', 'end', 'lat', 'lon','mpa', 'eez', 'regions.rfmo','fao', 'major_fao', 'eez12nm',
-       'boundingBox', 'startDistanceFromShoreKm', 'endDistanceFromShoreKm',
-       'startDistanceFromPortKm', 'endDistanceFromPortKm','vessel.id','vessel.flag','vessel.name','vessel.type','vessel.mmsi',
-                  'encounter.encountered_vessel.id', 'encounter.encountered_vessel.flag', 'encounter.encountered_vessel.name',
-                    'encounter.encountered_vessel.type','encounter.encountered_vessel.mmsi','medianDistanceKilometers', 'medianSpeedKnots',
-       'encounter_type']
+    encounters_new = encounters_new.rename({
+    'event_id': 'id',
+    'event_type': 'type',
+    'event_start': 'start',
+    'event_end': 'end',
+    'event_lat': 'lat',
+    'event_lon': 'lon',
+    'rfmo': 'regions.rfmo',
+    'vessel1_id': 'vessel.id',
+    'vessel1_flag': 'vessel.flag',
+    'vessel1_name': 'vessel.name',
+    'vessel1_type': 'vessel.type',
+    'vessel1_ssvid': 'vessel.mmsi',
+    'vessel2_id': 'encounter.encountered_vessel.id',
+    'vessel2_flag': 'encounter.encountered_vessel.flag',
+    'vessel2_name': 'encounter.encountered_vessel.name',
+    'vessel2_type': 'encounter.encountered_vessel.type',
+    'vessel2_ssvid': 'encounter.encountered_vessel.mmsi',
+    },
+    axis = 1)
 
     encounter = encounters_new[encounters_new['encounter_type']=='carrier-fishing'].copy()
     encounter2 = encounters.copy()
@@ -48,7 +72,9 @@ def merge_local_and_api(
     ## merge port_visits
     print(' > Now updating port_visits')
     port_visits_new = port_visits_new.drop_duplicates(subset=['event_id'])
-    port_visits = port_visits[port_visits.columns[:11].append(port_visits.columns[-4:])]
+    port_visits[['id', 'type', 'start', 'end', 'lat', 'lon', 'vessel.id', 'vessel.type',
+       'vessel.mmsi', 'vessel.name', 'vessel.flag', 'port.lat', 'port.lon',
+       'port.country', 'port.name']]
     port_visits.columns = ['event_id', 'event_type', 'event_start', 'event_end', 'event_lat',
        'event_lon','vessel_id', 'vessel_type','vessel_ssvid','vessel_name', 'vessel_flag', 'lat','lon','flag','name']
     

@@ -141,3 +141,9 @@ seb_readme.md
 
 # R 
 *Rapp.history
+
+/pipeline/src/gfw/port.csv
+/pipeline/src/gfw/encounter.csv
+/pipeline/src/gfw/loitering.csv
+/pipeline/src/gfw/api_data.xlsx
+/pipeline/src/gfw/~$api_data.xlsx
