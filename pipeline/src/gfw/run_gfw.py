@@ -18,7 +18,10 @@ def run_gfw():
     carriers, loitering, encounters, port_visits = merge.merge_local_and_api(
         loitering, encounters, port_visits, carriers_new, loitering_new, encounters_new, port_visits_new)
 
-
+    carriers.to_csv('pipeline/data/unified/carriers.csv')
+    loitering.to_csv('pipeline/data/unified/loitering.csv')
+    encounters.to_csv('pipeline/data/unified/encounters.csv')
+    port_visits.to_csv('pipeline/data/unified/port_visit.csv')
     return carriers, loitering, encounters, port_visits
 
 
