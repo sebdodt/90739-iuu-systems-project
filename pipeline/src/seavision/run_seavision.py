@@ -1,4 +1,5 @@
-
+import pandas as pd
+from src.seavision import api
 
 def get_info(carriers):
     '''
@@ -11,7 +12,7 @@ def get_info(carriers):
     for i in range(len(carriers)):
         rowData = carriers.iloc[i]
         mmsi = carriers.loc[i, 'mmsi'].astype(int)
-        result = result.append(get_vessel_history(mmsi))
+        result = result.append(api.get_vessel_history(mmsi))
     return result
 
 
