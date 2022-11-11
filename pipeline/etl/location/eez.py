@@ -1,6 +1,6 @@
 
 
-def in_eez():
+def in_eez(output):
     '''
     appends columns:
     - 'in_us_eez': whether boat is currently in U.S. EEZ
@@ -9,4 +9,4 @@ def in_eez():
     - 'in_eez': whether boat is currently in any EEZ
     - 'eez': name of the EEZ where boat is currently in
     '''
-    pass
+    return output
