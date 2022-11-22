@@ -17,5 +17,5 @@ def at_port(output):
     ############
     at_port_data = sea_vision[["MMSI", "Navigation Status"]]
     at_port_data['at_port'] = np.where(at_port_data["Navigation Status"]=="5-Moored", 1, 0)
-    output_1 = output.merge(at_port_data, left_on="mmsi", right_on="MMSI",how = "left")
-    return output_1
+    new_output = output.merge(at_port_data, left_on="MMSI", right_on="MMSI",how = "left")
+    return new_output
