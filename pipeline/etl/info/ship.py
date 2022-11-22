@@ -1,4 +1,5 @@
 import pandas as pd
+
 def mmsi_info(output):
     '''
     appends columns  for ship's information
@@ -21,3 +22,6 @@ def mmsi_info(output):
     info_data = sea_vision[["ETA", 'Call Sign', "Name", 'Year Built', 'Latitude','Longitude', 'Heading', 'Flag', 'Deadweight', "MMSI"]]
     new_output = output.merge(info_data, left_on="MMSI", right_on="MMSI",how = "left")
     return new_output
+    
+
+
