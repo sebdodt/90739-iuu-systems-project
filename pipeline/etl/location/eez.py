@@ -14,9 +14,17 @@ def in_eez(output):
     - 'eez': name of the EEZ where boat is currently in
     '''
 
-    ### to do: change the file name, this is the file name&oath of SEAVISION data file
+    ### to do: change the file name, this is the file name & path of SEAVISION data file
     output = pd.DataFrame(output)
     file_name = r"C:\Users\Irene\Desktop\Fall22\Capstone Project\Data\lists-Reefers-2022-11-11_04-40.csv"
+   
+    ### to do:chang the file name, this is the file name & path of NATO country code file 
+    file_nato = r"C:\Users\Irene\Desktop\Fall22\Capstone Project\Data\Nato_Country_codes.csv"
+    nato_code = pd.read_csv(file_nato)
+    # this is a list of nato country iso 3-digit code
+    nato_iso = list(nato_code["Trigram"])
+
+
     df= pd.read_csv(file_name)
     df['coordinates'] = list(zip(df['Latitude'], df['Longitude']))
     df.coordinates = df.coordinates.apply(Point)
@@ -28,13 +36,18 @@ def in_eez(output):
     sjoin = gpd.sjoin(gdf_points, gdf_polygons, how='left', op='within')
     df_join = pd.DataFrame(sjoin)
     result = df_join[["MMSI", "Latitude", "Longitude", "MRGID_TER1", "TERRITORY1", "TERRITORY2","SOVEREIGN1", "SOVEREIGN2", "ISO_SOV1"]]
+    result.fillna("N/A")
     ## Append useful columns!
     result["in_eez"] = np.where(result['MRGID_TER1'].isna(), 0, 1)
     us_iso = "USA"
     # five eyes countries: Australia, Canada, New Zealand, the United Kingdom and the United States
     five_eyes_iso =["USA", "AUS", "CAN", "NZL","GBR"] 
+    # this is a list of nato country iso 3-digit code
+    nato_iso = list(nato_code["Trigram"].dropna())
     result['in_us_eez'] = np.where(result['ISO_SOV1']== "USA", 1, 0)
     result['in_five_eyes_eez']= result.apply(lambda x: 1 if x['ISO_SOV1'] in five_eyes_iso else 0, axis=1 )
+    result['in_nato_eez']= result.apply(lambda x: 1 if x['ISO_SOV1'] in nato_iso else 0, axis=1 )
+    result = result.drop(["Latitude", "Longitude"], axis=1)
     new_output = output.merge(result,left_on="MMSI", right_on="MMSI",how = "left")
     return new_output
 
