@@ -26,7 +26,7 @@ def mmsi_info(output):
     sea_vision= pd.read_csv(seaVision_file)
     ### can be reused for other functions
     info_data = sea_vision[["ETA", 'Call Sign', "Name", 'Year Built', 'Latitude','Longitude', 'Heading', 'Flag', 'Deadweight', "MMSI", 'Registered Owner', 'Speed', 'Builder', 'Port Of Registry']]
-    new_output = output.merge(info_data, left_on="MMSI", right_on="MMSI",how = "left")
+    new_output = output.merge(info_data, left_on="mmsi", right_on="MMSI",how = "left")
     return new_output
     
 
