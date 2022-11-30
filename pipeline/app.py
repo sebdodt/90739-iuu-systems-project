@@ -8,6 +8,7 @@ from etl.location import distance, dod_zone, eez, port, rfmo
 from output import export
 
 ## importing data
+# This carriers is already merged with new columns
 carriers, loitering, encounters, port_visits = run_gfw.run_gfw()
 carriers_sv_info = run_seavision.get_info(carriers)
 carriers_sv_history = run_seavision.get_history(carriers)
