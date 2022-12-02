@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "red", "id": 0, "label": "Hrizolit", "shape": "dot", "size": 10}, {"color": "red", "id": 9, "label": "Tsar", "shape": "dot", "size": 10}, {"color": "red", "id": 32, "label": "Zaliv Vostok", "shape": "dot", "size": 10}, {"color": "red", "id": 40, "label": "Vladivostok 2000", "shape": "dot", "size": 10}, {"color": "red", "id": 1, "label": "Moneron", "shape": "dot", "size": 10}, {"color": "red", "id": 3, "label": "Kondor", "shape": "dot", "size": 10}, {"color": "red", "id": 7, "label": "Nagorsk", "shape": "dot", "size": 10}, {"color": "red", "id": 2, "label": "Vsevolod Sibirtsev", "shape": "dot", "size": 10}, {"color": "red", "id": 37, "label": "Bukhta Nagaeva", "shape": "dot", "size": 10}, {"color": "blue", "id": 4, "label": "Agnes 83", "shape": "dot", "size": 10}, {"color": "red", "id": 17, "label": "Ostrov Iony", "shape": "dot", "size": 10}, {"color": "blue", "id": 20, "label": "Horisont Iii", "shape": "dot", "size": 10}, {"color": "red", "id": 27, "label": "Krymskiy", "shape": "dot", "size": 10}, {"color": "blue", "id": 29, "label": NaN, "shape": "dot", "size": 10}, {"color": "blue", "id": 34, "label": "Qi Hang", "shape": "dot", "size": 10}, {"color": "blue", "id": 35, "label": "Jinzhou", "shape": "dot", "size": 10}, {"color": "red", "id": 5, "label": "Solid", "shape": "dot", "size": 10}, {"color": "blue", "id": 15, "label": "Nisshin Maru", "shape": "dot", "size": 10}, {"color": "red", "id": 18, "label": "Mekhanik S. Agapov", "shape": "dot", "size": 10}, {"color": "red", "id": 38, "label": "Lyra", "shape": "dot", "size": 10}, {"color": "red", "id": 6, "label": "Reefer", "shape": "dot", "size": 10}, {"color": "blue", "id": 10, "label": NaN, "shape": "dot", "size": 10}, {"color": "red", "id": 21, "label": "Ostrov Iturup", "shape": "dot", "size": 10}, {"color": "red", "id": 22, "label": "Kapitan Efremov", "shape": "dot", "size": 10}, {"color": "blue", "id": 25, "label": "Taisei Maru No.24", "shape": "dot", "size": 10}, {"color": "blue", "id": 33, "label": NaN, "shape": "dot", "size": 10}, {"color": "red", "id": 8, "label": "Predsedatel Ganslep", "shape": "dot", "size": 10}, {"color": "blue", "id": 23, "label": "Win Shuen Shing", "shape": "dot", "size": 10}, {"color": "red", "id": 14, "label": "Arctica", "shape": "dot", "size": 10}, {"color": "red", "id": 11, "label": "Lazurnyy", "shape": "dot", "size": 10}, {"color": "blue", "id": 26, "label": "Hai Feng 688", "shape": "dot", "size": 10}, {"color": "red", "id": 12, "label": "Ostrovnoy-7", "shape": "dot", "size": 10}, {"color": "red", "id": 30, "label": "Ultimate", "shape": "dot", "size": 10}, {"color": "blue", "id": 31, "label": "Chitose", "shape": "dot", "size": 10}, {"color": "blue", "id": 24, "label": "Her Wen No 1", "shape": "dot", "size": 10}, {"color": "blue", "id": 28, "label": "Alcedo", "shape": "dot", "size": 10}, {"color": "blue", "id": 13, "label": "Lonningen", "shape": "dot", "size": 10}, {"color": "red", "id": 16, "label": "B Preobrazheniya", "shape": "dot", "size": 10}, {"color": "blue", "id": 19, "label": NaN, "shape": "dot", "size": 10}, {"color": "blue", "id": 36, "label": "Sheng Hong", "shape": "dot", "size": 10}, {"color": "red", "id": 39, "label": "Mys Muravjeva", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 9, "width": 3.7375}, {"from": 0, "to": 32, "width": 3.0875}, {"from": 0, "to": 40, "width": 3.075}, {"from": 1, "to": 3, "width": 4.8125}, {"from": 1, "to": 7, "width": 6.1}, {"from": 2, "to": 37, "width": 10.8125}, {"from": 3, "to": 7, "width": 3.9875}, {"from": 4, "to": 17, "width": 5.1375}, {"from": 4, "to": 20, "width": 4.6}, {"from": 4, "to": 27, "width": 1.6}, {"from": 4, "to": 29, "width": 2.5625}, {"from": 4, "to": 34, "width": 4.2625}, {"from": 4, "to": 35, "width": 5.2375}, {"from": 4, "to": 37, "width": 1.4375}, {"from": 5, "to": 15, "width": 3.6625}, {"from": 5, "to": 18, "width": 3.65}, {"from": 5, "to": 38, "width": 4.6125}, {"from": 6, "to": 10, "width": 2.625}, {"from": 6, "to": 21, "width": 2.3875}, {"from": 6, "to": 22, "width": 2.9375}, {"from": 6, "to": 25, "width": 2.75}, {"from": 6, "to": 33, "width": 3.4875}, {"from": 8, "to": 23, "width": 2.8375}, {"from": 9, "to": 40, "width": 2.7875}, {"from": 10, "to": 14, "width": 3.3125}, {"from": 10, "to": 21, "width": 2.5375}, {"from": 10, "to": 22, "width": 5.3375}, {"from": 10, "to": 25, "width": 2.625}, {"from": 10, "to": 33, "width": 3.675}, {"from": 11, "to": 26, "width": 4.6125}, {"from": 11, "to": 40, "width": 3.0375}, {"from": 12, "to": 30, "width": 12.3875}, {"from": 14, "to": 22, "width": 2.3375}, {"from": 14, "to": 31, "width": 2.225}, {"from": 15, "to": 18, "width": 3.475}, {"from": 15, "to": 38, "width": 4.15}, {"from": 17, "to": 34, "width": 4.875}, {"from": 17, "to": 35, "width": 5.525}, {"from": 17, "to": 37, "width": 2.3}, {"from": 18, "to": 38, "width": 4.45}, {"from": 20, "to": 24, "width": 10.975}, {"from": 20, "to": 27, "width": 11.0}, {"from": 20, "to": 28, "width": 10.8625}, {"from": 20, "to": 29, "width": 11.55}, {"from": 20, "to": 30, "width": 1.8125}, {"from": 21, "to": 22, "width": 4.0}, {"from": 21, "to": 25, "width": 3.475}, {"from": 21, "to": 33, "width": 4.2625}, {"from": 21, "to": 38, "width": 2.7875}, {"from": 22, "to": 25, "width": 2.9375}, {"from": 22, "to": 31, "width": 3.2}, {"from": 22, "to": 33, "width": 3.9375}, {"from": 23, "to": 32, "width": 2.575}, {"from": 24, "to": 27, "width": 12.9875}, {"from": 24, "to": 28, "width": 4.4125}, {"from": 24, "to": 29, "width": 6.5125}, {"from": 24, "to": 30, "width": 1.4625}, {"from": 24, "to": 37, "width": 1.1125}, {"from": 25, "to": 31, "width": 3.075}, {"from": 25, "to": 33, "width": 5.175}, {"from": 26, "to": 40, "width": 3.3375}, {"from": 27, "to": 28, "width": 13.775}, {"from": 27, "to": 29, "width": 16.5125}, {"from": 28, "to": 29, "width": 7.7125}, {"from": 28, "to": 37, "width": 1.225}, {"from": 31, "to": 33, "width": 2.275}, {"from": 33, "to": 38, "width": 2.575}, {"from": 34, "to": 35, "width": 4.9}, {"from": 34, "to": 37, "width": 1.575}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
