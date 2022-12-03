@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 6, "label": "JAN MARIA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 36, "label": "TAISEI MARU NO.24", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 48, "label": "CHIKUMA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 7, "label": "MYS MURAVYOVA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 34, "label": "HER WEN NO.1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 8, "label": "KAPITAN KRAVCHENKO", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 18, "label": "GABU REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 67, "label": "GLOBAL MARINER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 70, "label": "ZODIAK", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 9, "label": "GLACIER BAY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 13, "label": "OCEAN PHOENIX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 53, "label": "OCEAN MARINER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 14, "label": "LAZURNYY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 90, "label": "TAMA HOPE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 55, "label": "FULL KUO SHIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 78, "label": "MV OCEAN FRESH", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 26, "label": "QIHANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 27, "label": "PIOTR ZHITNIKOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 28, "label": "SHIN HANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 35, "label": "FU JYI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 45, "label": "HAI FENG 668", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 92, "label": "SUMMER BAY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 91, "label": "YONG XIANG 8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 52, "label": "HSIANG FU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 79, "label": "ZHONG XIANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 76, "label": "XING YUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 59, "label": "XINZHOULUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 63, "label": "WEI LI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 96, "label": "CAPE BELLE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 84, "label": "ASIAN COSMOS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 88, "label": "BEAM", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 89, "label": "FRIO AEGEAN 1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 0, "label": "HRIZOLIT", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 1, "label": "MONERON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 2, "label": "VSEVOLOD SIBIRTSEV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 3, "label": "AGNES 83", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 4, "label": "ACADIENNE GALE 2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 5, "label": "ALCEDO GUARD", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 10, "label": "KAI SHUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 11, "label": "NIKOLAY KASATKIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 12, "label": "MEKHANIK S. AGAPOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 15, "label": "SOLID", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 16, "label": "SALY REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 17, "label": "LONNINGEN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 19, "label": "KW174 ANNELIES ILENA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 20, "label": "MORSKOY PRIBOY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 21, "label": "PARNAS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 22, "label": "IBUKI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 23, "label": "NADIR", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 24, "label": "TAIHO MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 25, "label": "WIN SHUEN SHING", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 29, "label": "MING FENG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 30, "label": "HARIMA 2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 31, "label": "TENHO MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 32, "label": "AMATHUS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 33, "label": "HAI FENG 698", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 37, "label": "HORISONT III", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 38, "label": "KAPITAN EFREMOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 39, "label": "TAGANROGSKIY ZALIV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 40, "label": "NISSHIN MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 41, "label": "SHIN HANG 6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 42, "label": "WEI SHUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 43, "label": "MING HANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 44, "label": "SHOTA MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 46, "label": "LUNG YUIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 47, "label": "LYRA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 49, "label": "HAI FENG 638", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 50, "label": "CHITOSE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 51, "label": "FRIO ATLANTIC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 54, "label": "NAGORSK", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 56, "label": "HAI FENG 688", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 57, "label": "WESTERN PATRIOT", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 58, "label": "HAIFENG 618", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 60, "label": "SHENG HONG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 61, "label": "KAPITAN PRYAKHA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 62, "label": "WATER PHOENIX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 64, "label": "YUAN TAI NO.806", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 65, "label": "HAI FENG 896", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 66, "label": "BUKHTA NAGAEVA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 68, "label": "VICTORIA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 69, "label": "FRIO POSEIDON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 71, "label": "SKYFROST", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 72, "label": "BALYUZEK", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 73, "label": "FRIO DOLPHIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 74, "label": "YONG HANG 9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 75, "label": "MING HANG 8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 77, "label": "HARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 80, "label": "LIAN CHUANSHENG NO66", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 81, "label": "SHUN TIAN FA 168", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 82, "label": "HAI FENG 678", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 83, "label": "PREGOLSKIY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 85, "label": "HAI FENG 658", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 86, "label": "FRIO OLYMPIC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 87, "label": "ANTARCTIC SEA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 93, "label": "HSIANG CHI CHUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 94, "label": "FRIO ATHENS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 95, "label": "GIBRALTAR", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 97, "label": "FRIO MOGAMI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 98, "label": "FRIO AGATES", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 99, "label": "SIMFONIYA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 100, "label": "ORIENTAL CHILAN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 101, "label": "SL BOGO", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 102, "label": "ZHONGZHOU1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 103, "label": "ANTON GURIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 104, "label": "TAISEIMARU NO.15", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 105, "label": "SHANGHAI REEFER", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": 6, "to": 36, "width": 0.2}, {"from": 6, "to": 48, "width": 0.3}, {"from": 7, "to": 34, "width": 0.175}, {"from": 8, "to": 18, "width": 0.5}, {"from": 8, "to": 34, "width": 1.225}, {"from": 8, "to": 67, "width": 0.525}, {"from": 8, "to": 70, "width": 0.9}, {"from": 9, "to": 13, "width": 0.475}, {"from": 13, "to": 53, "width": 1.2}, {"from": 14, "to": 90, "width": 0.9}, {"from": 18, "to": 34, "width": 0.4}, {"from": 18, "to": 55, "width": 0.2}, {"from": 18, "to": 67, "width": 0.425}, {"from": 18, "to": 70, "width": 0.35}, {"from": 18, "to": 78, "width": 0.225}, {"from": 26, "to": 27, "width": 0.35}, {"from": 28, "to": 70, "width": 0.3}, {"from": 34, "to": 67, "width": 0.65}, {"from": 34, "to": 70, "width": 0.975}, {"from": 35, "to": 45, "width": 0.225}, {"from": 36, "to": 48, "width": 0.525}, {"from": 36, "to": 92, "width": 0.425}, {"from": 48, "to": 91, "width": 0.375}, {"from": 48, "to": 92, "width": 0.675}, {"from": 52, "to": 79, "width": 0.325}, {"from": 55, "to": 76, "width": 0.425}, {"from": 59, "to": 67, "width": 0.225}, {"from": 59, "to": 70, "width": 0.225}, {"from": 63, "to": 96, "width": 0.275}, {"from": 67, "to": 70, "width": 0.4}, {"from": 84, "to": 92, "width": 0.575}, {"from": 88, "to": 89, "width": 0.175}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 0, "label": "OSTROV IONY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 142, "label": "HAI FENG 823", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 2, "label": "VSEVOLOD SIBIRTSEV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 50, "label": "HAI FENG 628", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 69, "label": "HUAN YU 1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 85, "label": "ANDROMEDA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 150, "label": "GREEN TUNDRA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 163, "label": "AVUNDA REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 4, "label": "ACADIENNE GALE 2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 154, "label": "FORTUNA REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 6, "label": "AGNES 83", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 72, "label": "PREDSEDATEL GANSLEP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 80, "label": "SL BOGO", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 149, "label": "ORION", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 10, "label": "PETROGRADSKIY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 157, "label": "VIVA106", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 11, "label": "NAGORSK", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 114, "label": "FU YUAN YU LENG 999", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 13, "label": "TAIHO MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 23, "label": "OCEAN STAR 98", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 130, "label": "GREEN CONCORDIA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 138, "label": "RONGZHOULUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 16, "label": "SILVER ICE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 58, "label": "KAPITAN PRYAKHA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 75, "label": "QIHANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 107, "label": "VICTORIA II", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 139, "label": "SHUN TIAN FA 168", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 147, "label": "HAI FENG 896", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 148, "label": "QI HANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 155, "label": "CHEN YU NO.7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 17, "label": "ATMODA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 136, "label": "ANTON GURIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 18, "label": "WEI SHUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 68, "label": "TUNA QUEEN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 116, "label": "ROMULUS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 20, "label": "HER WEN NO.1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 104, "label": "YONG XIANG 8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 21, "label": "HAI FENG 698", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 143, "label": "ATLANTIC REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 32, "label": "PARNAS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 108, "label": "GLACIER BAY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 24, "label": "PIOTR ZHITNIKOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 31, "label": "KW174 ANNELIES ILENA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 35, "label": "OSTROV ITURUP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 92, "label": "MEKHANIK S. AGAPOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 111, "label": "UNION ONE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 127, "label": "KOMMUNARY NIKOLAYEVA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 162, "label": "ICEBERG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 25, "label": "FU JYI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 26, "label": "TAISEI MARU NO.24", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 44, "label": "TENHO MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 100, "label": "NADEZHDA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 102, "label": "YONG XIANG 7", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 131, "label": "GLOBAL MARINER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 27, "label": "CHITOSE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 146, "label": "FUTAGAMI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 29, "label": "MING FENG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 30, "label": "MING HANG 8", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 39, "label": "CHIKUMA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 123, "label": "MYS KOMMUNAROV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 34, "label": "SALY REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 38, "label": "IBUKI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 56, "label": "GUTSUL", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 117, "label": "KORSAKOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 119, "label": "HAIFENG 618", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 166, "label": "FRIO ANTARTIC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 36, "label": "MING HANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 65, "label": "ORIENTAL CHILAN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 153, "label": "FRIO0CANARIAS0000000", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 83, "label": "OCEAN PHOENIX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 46, "label": "LIAN CHUANSHENG NO66", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 49, "label": "FULL KUO SHIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 55, "label": "TAI FU NO.3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 81, "label": "XINZHOULUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 97, "label": "PONTOS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 135, "label": "BLUE ICE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 51, "label": "BUKHTA NAGAEVA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 99, "label": "VICTOR GAVRILOV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 52, "label": "ANGEL I", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 98, "label": "HAI FENG 678", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 109, "label": "NINGTAILENG2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 105, "label": "GARMONIYA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 61, "label": "ZHONGZHOU1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 78, "label": "YONG HANG 9", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 86, "label": "HSIANG FU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 152, "label": "HAI FENG 638", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 62, "label": "BUKHTA NATALII", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 63, "label": "DALMOS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 89, "label": "MV BARANA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 76, "label": "OU YA LENG 6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 73, "label": "GREEN TOLEDO", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 70, "label": "LONNINGEN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 77, "label": "TAI XIANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 95, "label": "WESTERN PATRIOT", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 120, "label": "SIMFONIYA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 84, "label": "HAI FENG 718", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 90, "label": "SHIN HANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 93, "label": "HOUTA MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 94, "label": "HARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 122, "label": "M/V IRIS REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 96, "label": "MEITA MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 125, "label": "FRIO SEVASTOPOLIS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 160, "label": "ZHEPUYULENG208", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 110, "label": "SAKHRYBA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 113, "label": "HO YUAN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 118, "label": "PAMYAT ILICHA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 164, "label": "LIAN JYI HSING", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 144, "label": "FRIO ATLANTIC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 1, "label": "HRIZOLIT", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 3, "label": "MONERON", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 5, "label": "MYS MURAVYOVA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 7, "label": "ALCEDO GUARD", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 8, "label": "JAN MARIA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 9, "label": "SOLID", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 12, "label": "GABU REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 14, "label": "WIN SHUEN SHING", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 15, "label": "NADIR", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 19, "label": "TAGANROGSKIY ZALIV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 22, "label": "HAI FENG 688", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 28, "label": "LAZURNYY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 33, "label": "GENTA MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 37, "label": "LYRA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 40, "label": "NIKOLAY KASATKIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 41, "label": "BUKHTA PREOBRAZHENIY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 42, "label": "SHANGHAI REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 43, "label": "TAISEIMARU NO.15", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 45, "label": "YUNG DA FA 102", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 47, "label": "GLACIER BAY", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 48, "label": "NISSHIN MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 53, "label": "TAI JI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 54, "label": "ORIENTAL DISCOVERER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 57, "label": "HUA FU 107", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 59, "label": "RYOMA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 60, "label": "YUAN TAI NO.806", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 64, "label": "HARIMA 2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 66, "label": "LUNG YUIN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 67, "label": "SHENG HONG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 71, "label": "CHANG CHING NO.1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 74, "label": "DAFENG MARINER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 79, "label": "TUNA PRINCESS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 82, "label": "HORISONT III", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 87, "label": "OCEAN MARINER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 88, "label": "KAPITAN KRAVCHENKO", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 91, "label": "ORION NO.1", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 101, "label": "SEIWA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 103, "label": "KAIHO MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 106, "label": "SARONIC BREEZE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 112, "label": "MV OCEAN FRESH", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 115, "label": "NING TAI LENG 6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 121, "label": "CASSIOPEA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 124, "label": "CAPTAIN MOKEEV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 126, "label": "PS REEFER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 128, "label": "BALYUZEK", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 129, "label": "EKATERINA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 132, "label": "PAMYAT KIROVA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 133, "label": "ALEXANDER", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 134, "label": "XING YUN", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 137, "label": "ZODIAK", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 140, "label": "BELOMORYE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 141, "label": "LA MANCHE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 145, "label": "SHIN HANG 6", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 151, "label": "FRIO LAS PALMAS", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 156, "label": "TAVRIA", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 158, "label": "TENHO MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 159, "label": "SHIN IZU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 161, "label": "F/V KENKEN 888", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 165, "label": "WEI LI", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 167, "label": "WAKATAKE MARU", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 168, "label": "ZHONG XIANG", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 169, "label": "FRIO POSEIDON", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 142, "width": 0.1}, {"from": 2, "to": 50, "width": 0.15}, {"from": 2, "to": 69, "width": 0.15}, {"from": 2, "to": 85, "width": 0.275}, {"from": 2, "to": 150, "width": 0.15}, {"from": 2, "to": 163, "width": 0.175}, {"from": 4, "to": 154, "width": 0.125}, {"from": 6, "to": 72, "width": 0.225}, {"from": 6, "to": 80, "width": 0.2}, {"from": 6, "to": 149, "width": 0.425}, {"from": 10, "to": 157, "width": 1.025}, {"from": 11, "to": 114, "width": 0.15}, {"from": 13, "to": 23, "width": 0.15}, {"from": 13, "to": 130, "width": 0.125}, {"from": 13, "to": 138, "width": 0.275}, {"from": 16, "to": 58, "width": 0.175}, {"from": 16, "to": 72, "width": 0.475}, {"from": 16, "to": 75, "width": 0.175}, {"from": 16, "to": 107, "width": 0.225}, {"from": 16, "to": 139, "width": 0.4}, {"from": 16, "to": 147, "width": 0.175}, {"from": 16, "to": 148, "width": 0.25}, {"from": 16, "to": 155, "width": 0.15}, {"from": 17, "to": 136, "width": 0.125}, {"from": 18, "to": 68, "width": 0.45}, {"from": 18, "to": 116, "width": 0.375}, {"from": 20, "to": 104, "width": 0.325}, {"from": 20, "to": 114, "width": 0.275}, {"from": 21, "to": 143, "width": 0.275}, {"from": 23, "to": 32, "width": 0.225}, {"from": 23, "to": 108, "width": 0.15}, {"from": 23, "to": 138, "width": 0.3}, {"from": 24, "to": 31, "width": 0.325}, {"from": 24, "to": 35, "width": 0.175}, {"from": 24, "to": 58, "width": 0.45}, {"from": 24, "to": 92, "width": 0.35}, {"from": 24, "to": 107, "width": 0.225}, {"from": 24, "to": 111, "width": 0.625}, {"from": 24, "to": 127, "width": 0.175}, {"from": 24, "to": 139, "width": 0.25}, {"from": 24, "to": 147, "width": 0.325}, {"from": 24, "to": 148, "width": 0.325}, {"from": 24, "to": 162, "width": 0.175}, {"from": 25, "to": 72, "width": 0.1}, {"from": 25, "to": 139, "width": 0.125}, {"from": 25, "to": 155, "width": 0.1}, {"from": 26, "to": 44, "width": 1.9}, {"from": 26, "to": 100, "width": 1.4}, {"from": 26, "to": 102, "width": 1.675}, {"from": 26, "to": 131, "width": 0.725}, {"from": 27, "to": 146, "width": 0.325}, {"from": 29, "to": 142, "width": 0.1}, {"from": 30, "to": 39, "width": 0.15}, {"from": 31, "to": 58, "width": 0.175}, {"from": 31, "to": 72, "width": 0.15}, {"from": 31, "to": 80, "width": 0.175}, {"from": 31, "to": 111, "width": 0.575}, {"from": 31, "to": 123, "width": 0.15}, {"from": 31, "to": 149, "width": 0.125}, {"from": 32, "to": 108, "width": 0.3}, {"from": 32, "to": 138, "width": 0.15}, {"from": 34, "to": 38, "width": 0.475}, {"from": 35, "to": 56, "width": 0.15}, {"from": 35, "to": 58, "width": 0.45}, {"from": 35, "to": 92, "width": 0.825}, {"from": 35, "to": 107, "width": 0.125}, {"from": 35, "to": 117, "width": 0.175}, {"from": 35, "to": 119, "width": 0.225}, {"from": 35, "to": 127, "width": 0.375}, {"from": 35, "to": 139, "width": 0.125}, {"from": 35, "to": 147, "width": 0.5}, {"from": 35, "to": 148, "width": 0.275}, {"from": 35, "to": 162, "width": 0.15}, {"from": 35, "to": 166, "width": 0.35}, {"from": 36, "to": 65, "width": 0.1}, {"from": 36, "to": 72, "width": 0.125}, {"from": 36, "to": 155, "width": 0.125}, {"from": 38, "to": 153, "width": 0.175}, {"from": 38, "to": 166, "width": 0.275}, {"from": 39, "to": 83, "width": 0.175}, {"from": 44, "to": 100, "width": 0.925}, {"from": 44, "to": 102, "width": 1.175}, {"from": 44, "to": 131, "width": 0.525}, {"from": 46, "to": 58, "width": 0.2}, {"from": 46, "to": 92, "width": 0.35}, {"from": 46, "to": 147, "width": 0.325}, {"from": 49, "to": 55, "width": 0.4}, {"from": 49, "to": 81, "width": 0.125}, {"from": 50, "to": 97, "width": 0.2}, {"from": 50, "to": 114, "width": 0.15}, {"from": 50, "to": 135, "width": 0.275}, {"from": 50, "to": 150, "width": 1.0}, {"from": 51, "to": 99, "width": 0.2}, {"from": 52, "to": 72, "width": 0.1}, {"from": 52, "to": 98, "width": 0.75}, {"from": 52, "to": 109, "width": 1.125}, {"from": 52, "to": 155, "width": 1.725}, {"from": 55, "to": 81, "width": 0.425}, {"from": 56, "to": 58, "width": 0.25}, {"from": 56, "to": 105, "width": 0.1}, {"from": 56, "to": 166, "width": 1.1}, {"from": 58, "to": 72, "width": 0.175}, {"from": 58, "to": 92, "width": 1.05}, {"from": 58, "to": 105, "width": 0.1}, {"from": 58, "to": 107, "width": 0.45}, {"from": 58, "to": 127, "width": 0.225}, {"from": 58, "to": 139, "width": 0.35}, {"from": 58, "to": 147, "width": 1.2}, {"from": 58, "to": 148, "width": 0.475}, {"from": 58, "to": 149, "width": 0.125}, {"from": 58, "to": 162, "width": 0.475}, {"from": 58, "to": 166, "width": 0.55}, {"from": 61, "to": 78, "width": 0.2}, {"from": 61, "to": 86, "width": 0.525}, {"from": 61, "to": 152, "width": 0.275}, {"from": 62, "to": 142, "width": 0.125}, {"from": 63, "to": 89, "width": 0.2}, {"from": 65, "to": 76, "width": 0.225}, {"from": 65, "to": 92, "width": 0.175}, {"from": 65, "to": 157, "width": 0.25}, {"from": 68, "to": 73, "width": 0.25}, {"from": 68, "to": 116, "width": 0.275}, {"from": 70, "to": 100, "width": 0.125}, {"from": 70, "to": 102, "width": 0.15}, {"from": 72, "to": 75, "width": 0.25}, {"from": 72, "to": 80, "width": 0.225}, {"from": 72, "to": 92, "width": 0.25}, {"from": 72, "to": 107, "width": 0.65}, {"from": 72, "to": 139, "width": 0.875}, {"from": 72, "to": 147, "width": 0.175}, {"from": 72, "to": 148, "width": 0.825}, {"from": 72, "to": 149, "width": 0.15}, {"from": 72, "to": 155, "width": 0.275}, {"from": 75, "to": 139, "width": 0.2}, {"from": 75, "to": 148, "width": 0.275}, {"from": 76, "to": 123, "width": 0.15}, {"from": 77, "to": 99, "width": 0.5}, {"from": 80, "to": 95, "width": 0.325}, {"from": 80, "to": 149, "width": 0.125}, {"from": 83, "to": 120, "width": 0.2}, {"from": 84, "to": 136, "width": 0.15}, {"from": 86, "to": 152, "width": 0.225}, {"from": 90, "to": 99, "width": 0.325}, {"from": 92, "to": 107, "width": 0.45}, {"from": 92, "to": 127, "width": 0.3}, {"from": 92, "to": 139, "width": 0.525}, {"from": 92, "to": 147, "width": 0.925}, {"from": 92, "to": 148, "width": 0.475}, {"from": 92, "to": 157, "width": 0.15}, {"from": 92, "to": 162, "width": 0.325}, {"from": 93, "to": 166, "width": 0.325}, {"from": 94, "to": 122, "width": 0.15}, {"from": 94, "to": 130, "width": 0.35}, {"from": 96, "to": 125, "width": 0.15}, {"from": 96, "to": 160, "width": 0.15}, {"from": 97, "to": 150, "width": 0.275}, {"from": 98, "to": 109, "width": 0.725}, {"from": 98, "to": 155, "width": 1.225}, {"from": 100, "to": 102, "width": 0.725}, {"from": 100, "to": 131, "width": 0.325}, {"from": 102, "to": 131, "width": 0.35}, {"from": 104, "to": 114, "width": 0.2}, {"from": 105, "to": 166, "width": 0.175}, {"from": 107, "to": 139, "width": 0.675}, {"from": 107, "to": 147, "width": 0.2}, {"from": 107, "to": 148, "width": 0.6}, {"from": 107, "to": 155, "width": 0.225}, {"from": 107, "to": 162, "width": 0.2}, {"from": 107, "to": 166, "width": 0.1}, {"from": 109, "to": 155, "width": 1.55}, {"from": 110, "to": 139, "width": 0.225}, {"from": 113, "to": 162, "width": 0.3}, {"from": 114, "to": 150, "width": 0.15}, {"from": 117, "to": 119, "width": 0.2}, {"from": 117, "to": 127, "width": 0.225}, {"from": 118, "to": 164, "width": 0.15}, {"from": 122, "to": 130, "width": 0.2}, {"from": 127, "to": 147, "width": 0.25}, {"from": 127, "to": 148, "width": 0.15}, {"from": 127, "to": 162, "width": 0.1}, {"from": 135, "to": 150, "width": 0.2}, {"from": 139, "to": 147, "width": 0.25}, {"from": 139, "to": 148, "width": 0.625}, {"from": 139, "to": 155, "width": 0.175}, {"from": 139, "to": 162, "width": 0.3}, {"from": 143, "to": 157, "width": 0.125}, {"from": 144, "to": 149, "width": 0.15}, {"from": 147, "to": 148, "width": 0.25}, {"from": 147, "to": 162, "width": 0.25}, {"from": 148, "to": 157, "width": 0.125}, {"from": 148, "to": 162, "width": 0.45}, {"from": 153, "to": 155, "width": 0.225}, {"from": 155, "to": 157, "width": 0.125}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
