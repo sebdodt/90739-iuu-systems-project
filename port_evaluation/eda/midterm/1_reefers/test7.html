@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "grey", "id": 0, "label": "Hrizolit", "shape": "dot", "size": 20}, {"color": "grey", "id": 9, "label": "Tsar", "shape": "dot", "size": 7}, {"color": "grey", "id": 81, "label": NaN, "shape": "dot", "size": 2}, {"color": "grey", "id": 84, "label": "Kommunary Nikolayeva", "shape": "dot", "size": 2}, {"color": "grey", "id": 1, "label": "Moneron", "shape": "dot", "size": 13}, {"color": "red", "id": 66, "label": "Haifeng 618", "shape": "dot", "size": 3}, {"color": "grey", "id": 3, "label": "Kondor", "shape": "dot", "size": 12}, {"color": "grey", "id": 16, "label": "B Preobrazheniya", "shape": "dot", "size": 6}, {"color": "grey", "id": 19, "label": NaN, "shape": "dot", "size": 5}, {"color": "grey", "id": 21, "label": "Ostrov Iturup", "shape": "dot", "size": 5}, {"color": "green", "id": 22, "label": "Kapitan Efremov", "shape": "dot", "size": 5}, {"color": "grey", "id": 23, "label": "Win Shuen Shing", "shape": "dot", "size": 5}, {"color": "grey", "id": 31, "label": "Chitose", "shape": "dot", "size": 4}, {"color": "grey", "id": 34, "label": "Qi Hang", "shape": "dot", "size": 4}, {"color": "grey", "id": 40, "label": "Vladivostok 2000", "shape": "dot", "size": 3}, {"color": "grey", "id": 42, "label": "25", "shape": "dot", "size": 3}, {"color": "grey", "id": 50, "label": "Fish Fry 7", "shape": "dot", "size": 3}, {"color": "grey", "id": 58, "label": "Parnas", "shape": "dot", "size": 3}, {"color": "grey", "id": 5, "label": "Solid", "shape": "dot", "size": 11}, {"color": "grey", "id": 79, "label": "Anton Gurin", "shape": "dot", "size": 2}, {"color": "grey", "id": 7, "label": "Nagorsk", "shape": "dot", "size": 9}, {"color": "grey", "id": 18, "label": "Mekhanik S. Agapov", "shape": "dot", "size": 6}, {"color": "grey", "id": 49, "label": "Victor Gavrilov", "shape": "dot", "size": 3}, {"color": "grey", "id": 74, "label": NaN, "shape": "dot", "size": 2}, {"color": "grey", "id": 76, "label": "Fu Yuan Yu Yun 688", "shape": "dot", "size": 2}, {"color": "grey", "id": 80, "label": "Balyuzek", "shape": "dot", "size": 2}, {"color": "grey", "id": 10, "label": NaN, "shape": "dot", "size": 6}, {"color": "red", "id": 45, "label": "Hai Feng 698", "shape": "dot", "size": 3}, {"color": "grey", "id": 78, "label": NaN, "shape": "dot", "size": 2}, {"color": "grey", "id": 12, "label": "Ostrovnoy-7", "shape": "dot", "size": 6}, {"color": "grey", "id": 36, "label": "Sheng Hong", "shape": "dot", "size": 3}, {"color": "grey", "id": 52, "label": "Rong Zhou", "shape": "dot", "size": 3}, {"color": "grey", "id": 54, "label": "Meredian Guard", "shape": "dot", "size": 3}, {"color": "grey", "id": 70, "label": "Kmn Indah Samudra", "shape": "dot", "size": 2}, {"color": "grey", "id": 75, "label": "Mylo", "shape": "dot", "size": 2}, {"color": "grey", "id": 13, "label": "Lonningen", "shape": "dot", "size": 6}, {"color": "grey", "id": 37, "label": "Bukhta Nagaeva", "shape": "dot", "size": 3}, {"color": "grey", "id": 14, "label": "Arctica", "shape": "dot", "size": 6}, {"color": "grey", "id": 29, "label": NaN, "shape": "dot", "size": 4}, {"color": "grey", "id": 15, "label": "Nisshin Maru", "shape": "dot", "size": 6}, {"color": "grey", "id": 30, "label": "Ultimate", "shape": "dot", "size": 4}, {"color": "grey", "id": 56, "label": NaN, "shape": "dot", "size": 3}, {"color": "grey", "id": 20, "label": "Horisont Iii", "shape": "dot", "size": 5}, {"color": "red", "id": 26, "label": "Hai Feng 688", "shape": "dot", "size": 4}, {"color": "red", "id": 44, "label": "Hai Feng 718", "shape": "dot", "size": 3}, {"color": "grey", "id": 57, "label": "He Shun", "shape": "dot", "size": 3}, {"color": "grey", "id": 27, "label": "Krymskiy", "shape": "dot", "size": 4}, {"color": "grey", "id": 43, "label": "Wei Ning", "shape": "dot", "size": 3}, {"color": "grey", "id": 77, "label": "Borkur", "shape": "dot", "size": 2}, {"color": "green", "id": 32, "label": "Zaliv Vostok", "shape": "dot", "size": 4}, {"color": "grey", "id": 33, "label": NaN, "shape": "dot", "size": 4}, {"color": "grey", "id": 46, "label": "Yuan Tai No.8o6", "shape": "dot", "size": 3}, {"color": "grey", "id": 35, "label": "Jinzhou", "shape": "dot", "size": 4}, {"color": "grey", "id": 38, "label": "Lyra", "shape": "dot", "size": 3}, {"color": "grey", "id": 47, "label": "Zhong Ju Leng1", "shape": "dot", "size": 3}, {"color": "grey", "id": 39, "label": "Mys Muravjeva", "shape": "dot", "size": 3}, {"color": "red", "id": 53, "label": "Hai Feng 678", "shape": "dot", "size": 3}, {"color": "grey", "id": 51, "label": "Ibuki", "shape": "dot", "size": 3}, {"color": "grey", "id": 69, "label": "Shenju", "shape": "dot", "size": 2}, {"color": "grey", "id": 72, "label": "Han Xing", "shape": "dot", "size": 2}, {"color": "grey", "id": 55, "label": NaN, "shape": "dot", "size": 3}, {"color": "grey", "id": 60, "label": NaN, "shape": "dot", "size": 3}, {"color": "grey", "id": 59, "label": "Lari", "shape": "dot", "size": 3}, {"color": "grey", "id": 73, "label": "Ming Hang 7", "shape": "dot", "size": 2}, {"color": "green", "id": 2, "label": "Vsevolod Sibirtsev", "shape": "dot", "size": 12.51088534107402}, {"color": "grey", "id": 4, "label": "Agnes 83", "shape": "dot", "size": 11.586149699357247}, {"color": "grey", "id": 6, "label": "Reefer", "shape": "dot", "size": 9.55421936554012}, {"color": "grey", "id": 8, "label": "Predsedatel Ganslep", "shape": "dot", "size": 7.887207132490151}, {"color": "grey", "id": 11, "label": "Lazurnyy", "shape": "dot", "size": 6.8048932199875605}, {"color": "grey", "id": 17, "label": "Ostrov Iony", "shape": "dot", "size": 6.099937798051006}, {"color": "grey", "id": 24, "label": "Her Wen No 1", "shape": "dot", "size": 5.158614969935725}, {"color": "grey", "id": 25, "label": "Taisei Maru No.24", "shape": "dot", "size": 4.884926394360357}, {"color": "grey", "id": 28, "label": "Alcedo", "shape": "dot", "size": 4.503421107194693}, {"color": "grey", "id": 41, "label": "Obayatelnyy", "shape": "dot", "size": 3.8482272444536596}, {"color": "grey", "id": 48, "label": "Lian Chuan Sheng 66", "shape": "dot", "size": 3.661621397470454}, {"color": "grey", "id": 61, "label": "Chen Yu No.7", "shape": "dot", "size": 3.1640058055152394}, {"color": "grey", "id": 62, "label": "Lung Yuin", "shape": "dot", "size": 3.1598590089156127}, {"color": "blue", "id": 63, "label": "Ningtaileng7", "shape": "dot", "size": 3.122537839518972}, {"color": "grey", "id": 64, "label": "Oriental Chilan", "shape": "dot", "size": 3.076923076923077}, {"color": "grey", "id": 65, "label": "Ocean Fresh", "shape": "dot", "size": 3.0271615177275555}, {"color": "grey", "id": 67, "label": "Ming Hang 5", "shape": "dot", "size": 2.94422558573502}, {"color": "grey", "id": 68, "label": "Shun Ze Leng 7", "shape": "dot", "size": 2.94422558573502}, {"color": "grey", "id": 71, "label": "Ostrov Shikotan", "shape": "dot", "size": 2.882023636740618}, {"color": "grey", "id": 82, "label": "Vida I", "shape": "dot", "size": 2.7534729421521877}, {"color": "grey", "id": 83, "label": "Carmencita", "shape": "dot", "size": 2.73688575575368}, {"color": "grey", "id": 85, "label": "Shun Tian Fa No.168", "shape": "dot", "size": 2.720298569355173}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 9, "width": 0.8}, {"from": 0, "to": 81, "width": 0.375}, {"from": 0, "to": 84, "width": 0.525}, {"from": 1, "to": 66, "width": 0.35}, {"from": 3, "to": 16, "width": 0.5}, {"from": 3, "to": 19, "width": 1.3}, {"from": 3, "to": 21, "width": 0.225}, {"from": 3, "to": 22, "width": 1.425}, {"from": 3, "to": 23, "width": 2.275}, {"from": 3, "to": 31, "width": 0.375}, {"from": 3, "to": 34, "width": 0.275}, {"from": 3, "to": 40, "width": 0.225}, {"from": 3, "to": 42, "width": 0.425}, {"from": 3, "to": 50, "width": 0.575}, {"from": 3, "to": 58, "width": 0.4}, {"from": 5, "to": 79, "width": 2.45}, {"from": 7, "to": 16, "width": 0.3}, {"from": 7, "to": 18, "width": 0.875}, {"from": 7, "to": 40, "width": 0.9}, {"from": 7, "to": 49, "width": 0.325}, {"from": 7, "to": 50, "width": 0.325}, {"from": 7, "to": 74, "width": 0.25}, {"from": 7, "to": 76, "width": 0.65}, {"from": 7, "to": 80, "width": 0.275}, {"from": 9, "to": 81, "width": 0.275}, {"from": 9, "to": 84, "width": 0.525}, {"from": 10, "to": 45, "width": 0.5}, {"from": 10, "to": 78, "width": 0.5}, {"from": 12, "to": 36, "width": 0.425}, {"from": 12, "to": 52, "width": 1.175}, {"from": 12, "to": 54, "width": 0.325}, {"from": 12, "to": 70, "width": 0.45}, {"from": 12, "to": 75, "width": 0.625}, {"from": 13, "to": 37, "width": 0.25}, {"from": 14, "to": 29, "width": 0.375}, {"from": 15, "to": 74, "width": 0.775}, {"from": 16, "to": 18, "width": 0.65}, {"from": 16, "to": 19, "width": 0.4}, {"from": 16, "to": 21, "width": 0.55}, {"from": 16, "to": 22, "width": 0.25}, {"from": 16, "to": 23, "width": 0.775}, {"from": 16, "to": 30, "width": 0.325}, {"from": 16, "to": 31, "width": 0.6}, {"from": 16, "to": 34, "width": 0.75}, {"from": 16, "to": 40, "width": 1.0}, {"from": 16, "to": 42, "width": 0.625}, {"from": 16, "to": 49, "width": 1.3}, {"from": 16, "to": 50, "width": 1.325}, {"from": 16, "to": 56, "width": 0.325}, {"from": 16, "to": 74, "width": 0.475}, {"from": 16, "to": 76, "width": 0.6}, {"from": 16, "to": 80, "width": 0.675}, {"from": 18, "to": 21, "width": 0.8}, {"from": 18, "to": 40, "width": 2.0}, {"from": 18, "to": 49, "width": 1.175}, {"from": 18, "to": 74, "width": 1.025}, {"from": 18, "to": 76, "width": 1.525}, {"from": 18, "to": 80, "width": 0.825}, {"from": 19, "to": 21, "width": 0.3}, {"from": 19, "to": 22, "width": 1.5}, {"from": 19, "to": 23, "width": 3.725}, {"from": 19, "to": 40, "width": 0.25}, {"from": 19, "to": 42, "width": 0.4}, {"from": 20, "to": 45, "width": 0.825}, {"from": 20, "to": 78, "width": 0.65}, {"from": 21, "to": 23, "width": 0.375}, {"from": 21, "to": 31, "width": 0.425}, {"from": 21, "to": 34, "width": 1.95}, {"from": 21, "to": 40, "width": 1.025}, {"from": 21, "to": 49, "width": 0.775}, {"from": 21, "to": 50, "width": 1.325}, {"from": 21, "to": 74, "width": 0.35}, {"from": 21, "to": 76, "width": 1.0}, {"from": 21, "to": 80, "width": 0.6}, {"from": 22, "to": 23, "width": 2.475}, {"from": 22, "to": 40, "width": 0.25}, {"from": 23, "to": 31, "width": 0.575}, {"from": 23, "to": 34, "width": 0.5}, {"from": 23, "to": 40, "width": 0.4}, {"from": 23, "to": 50, "width": 0.75}, {"from": 26, "to": 44, "width": 5.575}, {"from": 26, "to": 57, "width": 3.35}, {"from": 27, "to": 43, "width": 0.35}, {"from": 27, "to": 77, "width": 0.475}, {"from": 29, "to": 32, "width": 0.225}, {"from": 30, "to": 31, "width": 0.275}, {"from": 30, "to": 40, "width": 0.35}, {"from": 30, "to": 49, "width": 0.3}, {"from": 30, "to": 50, "width": 0.5}, {"from": 31, "to": 34, "width": 0.475}, {"from": 31, "to": 40, "width": 1.675}, {"from": 31, "to": 42, "width": 1.05}, {"from": 31, "to": 49, "width": 1.2}, {"from": 31, "to": 50, "width": 4.95}, {"from": 31, "to": 74, "width": 0.45}, {"from": 31, "to": 76, "width": 0.45}, {"from": 32, "to": 36, "width": 0.575}, {"from": 32, "to": 75, "width": 0.6}, {"from": 33, "to": 46, "width": 0.675}, {"from": 34, "to": 40, "width": 0.475}, {"from": 34, "to": 42, "width": 0.425}, {"from": 34, "to": 49, "width": 0.775}, {"from": 34, "to": 50, "width": 0.675}, {"from": 34, "to": 76, "width": 0.55}, {"from": 34, "to": 80, "width": 0.35}, {"from": 35, "to": 37, "width": 0.25}, {"from": 35, "to": 42, "width": 0.95}, {"from": 35, "to": 50, "width": 0.525}, {"from": 35, "to": 56, "width": 0.4}, {"from": 35, "to": 80, "width": 0.675}, {"from": 36, "to": 52, "width": 0.475}, {"from": 36, "to": 70, "width": 0.4}, {"from": 36, "to": 75, "width": 0.5}, {"from": 36, "to": 79, "width": 0.35}, {"from": 37, "to": 50, "width": 0.2}, {"from": 37, "to": 56, "width": 0.7}, {"from": 37, "to": 80, "width": 1.5}, {"from": 38, "to": 47, "width": 1.7}, {"from": 39, "to": 47, "width": 2.875}, {"from": 39, "to": 54, "width": 3.475}, {"from": 39, "to": 57, "width": 0.375}, {"from": 40, "to": 42, "width": 0.4}, {"from": 40, "to": 49, "width": 2.35}, {"from": 40, "to": 50, "width": 2.75}, {"from": 40, "to": 74, "width": 0.725}, {"from": 40, "to": 76, "width": 1.375}, {"from": 40, "to": 80, "width": 0.675}, {"from": 42, "to": 49, "width": 0.525}, {"from": 42, "to": 50, "width": 2.2}, {"from": 42, "to": 56, "width": 0.3}, {"from": 42, "to": 58, "width": 0.275}, {"from": 42, "to": 80, "width": 1.1}, {"from": 43, "to": 77, "width": 0.575}, {"from": 44, "to": 47, "width": 1.4}, {"from": 44, "to": 52, "width": 0.225}, {"from": 44, "to": 53, "width": 5.475}, {"from": 44, "to": 54, "width": 1.7}, {"from": 44, "to": 57, "width": 0.925}, {"from": 45, "to": 78, "width": 0.875}, {"from": 47, "to": 53, "width": 6.925}, {"from": 47, "to": 54, "width": 2.225}, {"from": 47, "to": 57, "width": 0.35}, {"from": 49, "to": 50, "width": 2.45}, {"from": 49, "to": 74, "width": 0.725}, {"from": 49, "to": 76, "width": 0.525}, {"from": 49, "to": 80, "width": 0.45}, {"from": 50, "to": 74, "width": 0.8}, {"from": 50, "to": 76, "width": 0.825}, {"from": 50, "to": 80, "width": 0.275}, {"from": 51, "to": 69, "width": 0.875}, {"from": 51, "to": 72, "width": 1.65}, {"from": 52, "to": 70, "width": 0.425}, {"from": 52, "to": 75, "width": 0.65}, {"from": 52, "to": 79, "width": 0.15}, {"from": 53, "to": 54, "width": 6.85}, {"from": 54, "to": 70, "width": 0.25}, {"from": 55, "to": 60, "width": 1.025}, {"from": 56, "to": 80, "width": 1.2}, {"from": 58, "to": 59, "width": 0.675}, {"from": 69, "to": 72, "width": 0.75}, {"from": 70, "to": 75, "width": 0.525}, {"from": 70, "to": 79, "width": 0.2}, {"from": 73, "to": 77, "width": 0.35}, {"from": 74, "to": 76, "width": 0.3}, {"from": 74, "to": 80, "width": 0.225}, {"from": 76, "to": 80, "width": 0.4}, {"from": 81, "to": 84, "width": 0.65}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
