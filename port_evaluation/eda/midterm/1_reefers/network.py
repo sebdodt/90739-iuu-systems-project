@@ -13,7 +13,7 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
     loitered_grouped.sort_values('loitering', ascending=False, inplace=True)
     top_100_loiterers = loitered_grouped['mmsi'].head(top_n)
     top_100_names = loitered_grouped['Name'].head(top_n).reset_index(drop=True)
-    n_loitering = loitered_grouped['loitering'].head(top_n).reset_index(drop=True)
+    n_loitering = loitered_grouped['loitering'].head(top_n).reset_index(drop=True) # maybe add log
     # top_100_flags = mmsi['Flag'].head(top_n).reset_index(drop=True)
     # top_100_owner = mmsi['Registered Owner'].head(top_n).reset_index(drop=True)
     encounters = encounters.loc[encounters['vessel.mmsi'].isin(top_100_loiterers),:]
