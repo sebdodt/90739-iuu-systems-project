@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 0, "label": "HRIZOLIT", "shape": "dot", "size": 28}, {"color": "#97c2fc", "id": 24, "label": "SOLID", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 72, "label": "JIN HWEI NO.101", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 104, "label": "PS REEFER", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 1, "label": "VSEVOLOD SIBIRTSEV", "shape": "dot", "size": 20}, {"color": "#97c2fc", "id": 22, "label": "MYS MURAVYOVA", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 2, "label": "BUKHTA PREOBRAZHENIY", "shape": "dot", "size": 12}, {"color": "#97c2fc", "id": 83, "label": "SARONIC BREEZE", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 3, "label": "OSTROV ITURUP", "shape": "dot", "size": 12}, {"color": "#97c2fc", "id": 94, "label": "FORTUNA REEFER", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 4, "label": "KONDOR", "shape": "dot", "size": 12}, {"color": "#97c2fc", "id": 5, "label": "PIOTR.ZHITNIKOV", "shape": "dot", "size": 12}, {"color": "#97c2fc", "id": 36, "label": "ZALIV VOSTOK", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 37, "label": "WEI SHUN", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 42, "label": "OU YA LENG 6", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 45, "label": "HER WEN NO.1", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 52, "label": "KOMMUNARY NIKOLAYEVA", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 56, "label": "V.STARZHINSKY", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 96, "label": "LONNINGEN", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 102, "label": "HAN XING", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 7, "label": "JAN MARIA", "shape": "dot", "size": 11}, {"color": "#97c2fc", "id": 60, "label": "HUA JIAN 1", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 9, "label": "PREDSEDATEL GANSLEP", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 12, "label": "HAI FENG 688", "shape": "dot", "size": 8}, {"color": "#97c2fc", "id": 70, "label": "KAPITAN PRYAKHA", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 84, "label": "SL BOGO", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 103, "label": "BELOMORYE", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 10, "label": "=MONERON=", "shape": "dot", "size": 9}, {"color": "#97c2fc", "id": 27, "label": "OSTROV SHIKOTAN", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 69, "label": "FULL KUO SHIN", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 81, "label": "PONTOS", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 91, "label": "SHENG HONG", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 11, "label": "ACADIENNE GALE 2", "shape": "dot", "size": 9}, {"color": "#97c2fc", "id": 38, "label": "MING HANG", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 43, "label": "MING HANG 8", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 64, "label": "HAI FA", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 75, "label": "MV OCEAN STAR 96", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 13, "label": "NAGORSK", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 30, "label": "LAZURNYY", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 34, "label": "FU JYI", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 14, "label": "PARNAS", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 16, "label": "TAIHO MARU", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 87, "label": "KAPITAN EFREMOV", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 98, "label": "ARKADIJA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 18, "label": "TENHO MARU", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 67, "label": "SILVER ICE", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 20, "label": "MEITA MARU", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 101, "label": "HUA JIAN 107", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 23, "label": "ZHONG JU LENG1", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 86, "label": "HORISONT III", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 57, "label": "DORADO", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 25, "label": "YONG XIANG 8", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 88, "label": "HUAN YU 1", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 26, "label": "HAI FENG 678", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 53, "label": "XINZHOULUN", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 58, "label": "YONG XIANG 7", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 28, "label": "YONG HANG 9", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 32, "label": "NISSHIN MARU", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 41, "label": "RONGZHOULUN", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 66, "label": "VICTOR GAVRILOV", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 59, "label": "OCEAN STAR 98", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 33, "label": "HARIMA 2", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 46, "label": "WIN SHUEN SHING", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 35, "label": "LIAN CHUANSHENG NO66", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 74, "label": "RETRIEVER", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 40, "label": "HAIFENG 618", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 63, "label": "TAI XIANG", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 73, "label": "MEKHANIK S. AGAPOV", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 51, "label": "MONERON", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 92, "label": "GARMONIYA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 106, "label": "RUI SHENG", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 55, "label": "BAO LUCKY", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 77, "label": "CHIKUMA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 65, "label": "TAISEIMARU NO.15", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 62, "label": "BUKHTA NAGAEVA", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 82, "label": "SHIN HANG 6", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 95, "label": "DAFENG MARINER", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 68, "label": "FU YUAN YU YUN 87", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 79, "label": "LYRA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 100, "label": "CARMENCITA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 71, "label": "GABU REEFER", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 6, "label": "AGNES 83", "shape": "dot", "size": 11.778120184899846}, {"color": "#97c2fc", "id": 8, "label": "SHIN HANG", "shape": "dot", "size": 10.39753466872111}, {"color": "#97c2fc", "id": 15, "label": "HAI FENG 628", "shape": "dot", "size": 7.808936825885979}, {"color": "#97c2fc", "id": 17, "label": "HAI FENG 668", "shape": "dot", "size": 7.420647149460709}, {"color": "#97c2fc", "id": 19, "label": "YANYULENG2", "shape": "dot", "size": 7.377503852080123}, {"color": "#97c2fc", "id": 21, "label": "QI HANG", "shape": "dot", "size": 7.248073959938367}, {"color": "#97c2fc", "id": 29, "label": "HAI FENG 658", "shape": "dot", "size": 6.687211093990754}, {"color": "#97c2fc", "id": 31, "label": "TAISEI MARU NO.24", "shape": "dot", "size": 6.385208012326657}, {"color": "#97c2fc", "id": 39, "label": "CHITOSE", "shape": "dot", "size": 5.824345146379045}, {"color": "#97c2fc", "id": 44, "label": "HAI FENG 718", "shape": "dot", "size": 5.565485362095531}, {"color": "#97c2fc", "id": 47, "label": "IBUKI", "shape": "dot", "size": 5.349768875192604}, {"color": "#97c2fc", "id": 48, "label": "KW174 ANNELIES ILENA", "shape": "dot", "size": 5.263482280431433}, {"color": "#97c2fc", "id": 49, "label": "SHOTA MARU", "shape": "dot", "size": 5.263482280431433}, {"color": "#97c2fc", "id": 50, "label": "TAI FU NO.3", "shape": "dot", "size": 5.220338983050848}, {"color": "#97c2fc", "id": 54, "label": "ANGEL I", "shape": "dot", "size": 4.875192604006163}, {"color": "#97c2fc", "id": 61, "label": "MV BARANA", "shape": "dot", "size": 4.530046224961479}, {"color": "#97c2fc", "id": 76, "label": "RYOMA", "shape": "dot", "size": 3.926040061633282}, {"color": "#97c2fc", "id": 78, "label": "WEI LI", "shape": "dot", "size": 3.839753466872111}, {"color": "#97c2fc", "id": 80, "label": "OSTROV IONY", "shape": "dot", "size": 3.7966101694915255}, {"color": "#97c2fc", "id": 85, "label": "FRIO POSEIDON", "shape": "dot", "size": 3.667180277349769}, {"color": "#97c2fc", "id": 89, "label": "TAI JI", "shape": "dot", "size": 3.5377503852080125}, {"color": "#97c2fc", "id": 90, "label": "SLAVYANKA", "shape": "dot", "size": 3.4514637904468413}, {"color": "#97c2fc", "id": 93, "label": "XING YUN", "shape": "dot", "size": 3.3651771956856704}, {"color": "#97c2fc", "id": 97, "label": "ORIENTAL DISCOVERER", "shape": "dot", "size": 3.2357473035439135}, {"color": "#97c2fc", "id": 99, "label": "NING TAI LENG 6", "shape": "dot", "size": 3.2357473035439135}, {"color": "#97c2fc", "id": 105, "label": "CHEN YU NO.7", "shape": "dot", "size": 3.1063174114021574}, {"color": "#97c2fc", "id": 107, "label": "OCEAN PHOENIX", "shape": "dot", "size": 3.1063174114021574}, {"color": "#97c2fc", "id": 108, "label": "SKYFROST", "shape": "dot", "size": 3.0631741140215714}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 24, "width": 0.325}, {"from": 0, "to": 72, "width": 0.3}, {"from": 0, "to": 104, "width": 0.325}, {"from": 1, "to": 22, "width": 0.825}, {"from": 2, "to": 83, "width": 0.425}, {"from": 3, "to": 94, "width": 0.2}, {"from": 4, "to": 5, "width": 0.425}, {"from": 4, "to": 36, "width": 0.375}, {"from": 4, "to": 37, "width": 0.25}, {"from": 4, "to": 42, "width": 0.175}, {"from": 4, "to": 45, "width": 0.35}, {"from": 4, "to": 52, "width": 0.35}, {"from": 4, "to": 56, "width": 0.35}, {"from": 4, "to": 94, "width": 0.325}, {"from": 4, "to": 96, "width": 0.6}, {"from": 4, "to": 102, "width": 0.575}, {"from": 5, "to": 96, "width": 0.325}, {"from": 5, "to": 102, "width": 2.35}, {"from": 7, "to": 60, "width": 0.325}, {"from": 9, "to": 12, "width": 0.2}, {"from": 9, "to": 70, "width": 0.3}, {"from": 9, "to": 84, "width": 0.35}, {"from": 9, "to": 103, "width": 0.275}, {"from": 10, "to": 27, "width": 0.125}, {"from": 10, "to": 36, "width": 0.475}, {"from": 10, "to": 37, "width": 0.275}, {"from": 10, "to": 42, "width": 1.3}, {"from": 10, "to": 52, "width": 0.225}, {"from": 10, "to": 69, "width": 0.15}, {"from": 10, "to": 81, "width": 0.375}, {"from": 10, "to": 91, "width": 1.125}, {"from": 10, "to": 94, "width": 1.0}, {"from": 11, "to": 38, "width": 0.175}, {"from": 12, "to": 43, "width": 0.425}, {"from": 12, "to": 64, "width": 0.325}, {"from": 12, "to": 70, "width": 0.375}, {"from": 12, "to": 75, "width": 0.25}, {"from": 12, "to": 84, "width": 0.475}, {"from": 12, "to": 103, "width": 0.475}, {"from": 13, "to": 22, "width": 0.3}, {"from": 13, "to": 30, "width": 0.275}, {"from": 13, "to": 34, "width": 0.3}, {"from": 14, "to": 27, "width": 0.425}, {"from": 16, "to": 22, "width": 0.325}, {"from": 16, "to": 30, "width": 1.325}, {"from": 16, "to": 87, "width": 0.15}, {"from": 16, "to": 98, "width": 0.275}, {"from": 18, "to": 67, "width": 0.275}, {"from": 20, "to": 22, "width": 0.275}, {"from": 20, "to": 101, "width": 0.325}, {"from": 22, "to": 30, "width": 0.65}, {"from": 22, "to": 98, "width": 0.275}, {"from": 23, "to": 52, "width": 0.275}, {"from": 23, "to": 86, "width": 0.175}, {"from": 24, "to": 57, "width": 0.175}, {"from": 24, "to": 72, "width": 0.175}, {"from": 24, "to": 104, "width": 0.2}, {"from": 25, "to": 88, "width": 0.3}, {"from": 25, "to": 104, "width": 0.425}, {"from": 26, "to": 53, "width": 0.4}, {"from": 26, "to": 58, "width": 0.6}, {"from": 26, "to": 102, "width": 0.225}, {"from": 27, "to": 42, "width": 0.275}, {"from": 28, "to": 32, "width": 1.175}, {"from": 28, "to": 41, "width": 0.5}, {"from": 28, "to": 66, "width": 0.9}, {"from": 30, "to": 98, "width": 0.625}, {"from": 32, "to": 41, "width": 1.1}, {"from": 32, "to": 59, "width": 0.575}, {"from": 32, "to": 66, "width": 1.575}, {"from": 33, "to": 46, "width": 0.15}, {"from": 35, "to": 70, "width": 0.225}, {"from": 35, "to": 74, "width": 0.275}, {"from": 35, "to": 84, "width": 0.25}, {"from": 36, "to": 52, "width": 0.5}, {"from": 36, "to": 81, "width": 0.2}, {"from": 36, "to": 86, "width": 0.475}, {"from": 36, "to": 91, "width": 0.275}, {"from": 36, "to": 94, "width": 0.2}, {"from": 36, "to": 96, "width": 0.2}, {"from": 37, "to": 52, "width": 0.45}, {"from": 37, "to": 81, "width": 0.325}, {"from": 40, "to": 43, "width": 0.15}, {"from": 40, "to": 63, "width": 0.25}, {"from": 40, "to": 81, "width": 0.25}, {"from": 40, "to": 91, "width": 0.4}, {"from": 40, "to": 94, "width": 0.725}, {"from": 41, "to": 59, "width": 0.45}, {"from": 41, "to": 66, "width": 0.8}, {"from": 42, "to": 73, "width": 0.275}, {"from": 42, "to": 81, "width": 0.3}, {"from": 42, "to": 91, "width": 1.2}, {"from": 42, "to": 94, "width": 0.925}, {"from": 42, "to": 96, "width": 0.25}, {"from": 42, "to": 102, "width": 0.25}, {"from": 43, "to": 64, "width": 0.7}, {"from": 43, "to": 75, "width": 0.525}, {"from": 43, "to": 84, "width": 0.2}, {"from": 43, "to": 103, "width": 0.275}, {"from": 45, "to": 56, "width": 1.525}, {"from": 45, "to": 69, "width": 1.05}, {"from": 45, "to": 96, "width": 1.4}, {"from": 51, "to": 74, "width": 0.3}, {"from": 51, "to": 92, "width": 0.375}, {"from": 52, "to": 81, "width": 0.375}, {"from": 52, "to": 86, "width": 0.95}, {"from": 52, "to": 91, "width": 0.3}, {"from": 52, "to": 96, "width": 0.35}, {"from": 52, "to": 106, "width": 0.75}, {"from": 53, "to": 58, "width": 0.75}, {"from": 53, "to": 86, "width": 0.275}, {"from": 55, "to": 77, "width": 0.175}, {"from": 56, "to": 65, "width": 1.5}, {"from": 56, "to": 69, "width": 0.475}, {"from": 56, "to": 96, "width": 0.375}, {"from": 57, "to": 62, "width": 0.25}, {"from": 57, "to": 74, "width": 0.625}, {"from": 57, "to": 84, "width": 0.175}, {"from": 58, "to": 86, "width": 0.225}, {"from": 59, "to": 66, "width": 0.375}, {"from": 59, "to": 82, "width": 0.325}, {"from": 60, "to": 92, "width": 0.15}, {"from": 60, "to": 95, "width": 0.225}, {"from": 62, "to": 74, "width": 0.25}, {"from": 63, "to": 94, "width": 0.325}, {"from": 64, "to": 70, "width": 0.15}, {"from": 64, "to": 75, "width": 0.275}, {"from": 64, "to": 84, "width": 0.4}, {"from": 64, "to": 103, "width": 0.275}, {"from": 68, "to": 79, "width": 0.375}, {"from": 68, "to": 82, "width": 0.25}, {"from": 68, "to": 100, "width": 0.25}, {"from": 69, "to": 91, "width": 0.35}, {"from": 69, "to": 96, "width": 0.3}, {"from": 70, "to": 84, "width": 0.6}, {"from": 70, "to": 103, "width": 0.5}, {"from": 71, "to": 92, "width": 0.4}, {"from": 73, "to": 81, "width": 0.375}, {"from": 74, "to": 84, "width": 0.2}, {"from": 77, "to": 83, "width": 0.2}, {"from": 79, "to": 94, "width": 0.175}, {"from": 81, "to": 91, "width": 0.3}, {"from": 81, "to": 94, "width": 0.55}, {"from": 81, "to": 106, "width": 0.125}, {"from": 83, "to": 104, "width": 0.175}, {"from": 84, "to": 103, "width": 0.575}, {"from": 86, "to": 106, "width": 0.8}, {"from": 88, "to": 104, "width": 0.4}, {"from": 91, "to": 94, "width": 1.275}, {"from": 96, "to": 102, "width": 0.65}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

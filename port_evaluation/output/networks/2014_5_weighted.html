@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 2, "label": "GLACIER BAY", "shape": "dot", "size": 24}, {"color": "#97c2fc", "id": 84, "label": "GENNADY VODOLAZSKIY", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 6, "label": "ACADIENNE GALE 2", "shape": "dot", "size": 19}, {"color": "#97c2fc", "id": 19, "label": "OCEAN PHOENIX", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 36, "label": "TAGANROGSKIY ZALIV", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 57, "label": "NISSHIN MARU", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 9, "label": "MORSKOY PRIBOY", "shape": "dot", "size": 16}, {"color": "#97c2fc", "id": 46, "label": "BUKHTA NAGAEVA", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 15, "label": "PIOTR ZHITNIKOV", "shape": "dot", "size": 14}, {"color": "#97c2fc", "id": 44, "label": "KRISTINA EA410", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 40, "label": "IBUKI", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 38, "label": "ASIAN COSMOS", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 61, "label": "NADIR", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 48, "label": "TAI FU 3", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 67, "label": "FRIO DOLPHIN", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 80, "label": "VICTORIA", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 0, "label": "KW174 ANNELIES ILENA", "shape": "dot", "size": 28.0}, {"color": "#97c2fc", "id": 1, "label": "HRIZOLIT", "shape": "dot", "size": 26.972477064220183}, {"color": "#97c2fc", "id": 3, "label": "ALCEDO GUARD", "shape": "dot", "size": 22.51987767584098}, {"color": "#97c2fc", "id": 4, "label": "AGNES 83", "shape": "dot", "size": 21.66360856269113}, {"color": "#97c2fc", "id": 5, "label": "ISLAND DAWN", "shape": "dot", "size": 19.43730886850153}, {"color": "#97c2fc", "id": 7, "label": "KAPITAN KRAVCHENKO", "shape": "dot", "size": 18.837920489296636}, {"color": "#97c2fc", "id": 8, "label": "BOROM DARADJI", "shape": "dot", "size": 16.69724770642202}, {"color": "#97c2fc", "id": 10, "label": "JAN MARIA", "shape": "dot", "size": 15.755351681957187}, {"color": "#97c2fc", "id": 11, "label": "MV OCEAN FRESH", "shape": "dot", "size": 15.070336391437309}, {"color": "#97c2fc", "id": 12, "label": "SALY REEFER", "shape": "dot", "size": 15.070336391437309}, {"color": "#97c2fc", "id": 13, "label": "TAIHO MARU", "shape": "dot", "size": 14.813455657492355}, {"color": "#97c2fc", "id": 14, "label": "POLUS-1", "shape": "dot", "size": 14.642201834862384}, {"color": "#97c2fc", "id": 16, "label": "CHITOSE", "shape": "dot", "size": 13.443425076452598}, {"color": "#97c2fc", "id": 17, "label": "LAZURNYY", "shape": "dot", "size": 13.100917431192661}, {"color": "#97c2fc", "id": 18, "label": "KAPITAN EFREMOV", "shape": "dot", "size": 12.758409785932722}, {"color": "#97c2fc", "id": 20, "label": "HARIMA 2", "shape": "dot", "size": 10.103975535168196}, {"color": "#97c2fc", "id": 21, "label": "MING HANG", "shape": "dot", "size": 9.418960244648318}, {"color": "#97c2fc", "id": 22, "label": "HSIANG CHI CHUN", "shape": "dot", "size": 9.418960244648318}, {"color": "#97c2fc", "id": 23, "label": "HORISONT III", "shape": "dot", "size": 9.333333333333332}, {"color": "#97c2fc", "id": 24, "label": "YONGXIANG8", "shape": "dot", "size": 9.076452599388379}, {"color": "#97c2fc", "id": 25, "label": "MING FENG", "shape": "dot", "size": 9.076452599388379}, {"color": "#97c2fc", "id": 26, "label": "MV BARANA", "shape": "dot", "size": 8.477064220183486}, {"color": "#97c2fc", "id": 27, "label": "SOLID", "shape": "dot", "size": 8.477064220183486}, {"color": "#97c2fc", "id": 28, "label": "LIAN CHUANSHENG NO66", "shape": "dot", "size": 8.391437308868502}, {"color": "#97c2fc", "id": 29, "label": "AMATHUS", "shape": "dot", "size": 8.391437308868502}, {"color": "#97c2fc", "id": 30, "label": "LUNG YUIN", "shape": "dot", "size": 8.391437308868502}, {"color": "#97c2fc", "id": 31, "label": "ROMULUS", "shape": "dot", "size": 8.391437308868502}, {"color": "#97c2fc", "id": 32, "label": "LAFAYETTE", "shape": "dot", "size": 8.220183486238533}, {"color": "#97c2fc", "id": 33, "label": "CHIKUMA", "shape": "dot", "size": 8.134556574923547}, {"color": "#97c2fc", "id": 34, "label": "HARU", "shape": "dot", "size": 8.048929663608561}, {"color": "#97c2fc", "id": 35, "label": "YU HSIANG MARU", "shape": "dot", "size": 7.963302752293578}, {"color": "#97c2fc", "id": 37, "label": "SHIN HANG", "shape": "dot", "size": 7.620795107033639}, {"color": "#97c2fc", "id": 39, "label": "LONNINGEN", "shape": "dot", "size": 7.363914373088685}, {"color": "#97c2fc", "id": 41, "label": "HAI FENG 678", "shape": "dot", "size": 7.2782874617737}, {"color": "#97c2fc", "id": 42, "label": "TAISEIMARU NO.15", "shape": "dot", "size": 7.2782874617737}, {"color": "#97c2fc", "id": 43, "label": "VSEVOLOD SIBIRTSEV", "shape": "dot", "size": 7.107033639143731}, {"color": "#97c2fc", "id": 45, "label": "WIN SHUEN SHING", "shape": "dot", "size": 7.107033639143731}, {"color": "#97c2fc", "id": 47, "label": "FUTAGAMI", "shape": "dot", "size": 7.0214067278287455}, {"color": "#97c2fc", "id": 49, "label": "EKATERINA", "shape": "dot", "size": 6.678899082568808}, {"color": "#97c2fc", "id": 50, "label": "SEIWA", "shape": "dot", "size": 6.678899082568808}, {"color": "#97c2fc", "id": 51, "label": "VIVA 106", "shape": "dot", "size": 6.422018348623854}, {"color": "#97c2fc", "id": 52, "label": "CHEN YU NO.7", "shape": "dot", "size": 6.422018348623854}, {"color": "#97c2fc", "id": 53, "label": "HAI FENG 823", "shape": "dot", "size": 6.336391437308868}, {"color": "#97c2fc", "id": 54, "label": "ATMODA", "shape": "dot", "size": 6.250764525993884}, {"color": "#97c2fc", "id": 55, "label": "ORIENTAL CHILAN", "shape": "dot", "size": 6.250764525993884}, {"color": "#97c2fc", "id": 56, "label": "KAI SHUN", "shape": "dot", "size": 6.165137614678899}, {"color": "#97c2fc", "id": 58, "label": "FULL KUO SHIN", "shape": "dot", "size": 6.165137614678899}, {"color": "#97c2fc", "id": 59, "label": "SKYFROST", "shape": "dot", "size": 6.165137614678899}, {"color": "#97c2fc", "id": 60, "label": "PETR BOGDANOV", "shape": "dot", "size": 6.165137614678899}, {"color": "#97c2fc", "id": 62, "label": "TUNA QUEEN", "shape": "dot", "size": 5.99388379204893}, {"color": "#97c2fc", "id": 63, "label": "WESTERN PATRIOT", "shape": "dot", "size": 5.99388379204893}, {"color": "#97c2fc", "id": 64, "label": "SHENG HONG", "shape": "dot", "size": 5.99388379204893}, {"color": "#97c2fc", "id": 65, "label": "PRINCE OF TIDES", "shape": "dot", "size": 5.908256880733945}, {"color": "#97c2fc", "id": 66, "label": "MEREDIAN", "shape": "dot", "size": 5.908256880733945}, {"color": "#97c2fc", "id": 68, "label": "HAI FENG 896", "shape": "dot", "size": 5.82262996941896}, {"color": "#97c2fc", "id": 69, "label": "GABU REEFER", "shape": "dot", "size": 5.82262996941896}, {"color": "#97c2fc", "id": 70, "label": "ANGEL I", "shape": "dot", "size": 5.7370030581039755}, {"color": "#97c2fc", "id": 71, "label": "GENTA MARU", "shape": "dot", "size": 5.7370030581039755}, {"color": "#97c2fc", "id": 72, "label": "QIHANG", "shape": "dot", "size": 5.7370030581039755}, {"color": "#97c2fc", "id": 73, "label": "HAI FENG 668", "shape": "dot", "size": 5.651376146788991}, {"color": "#97c2fc", "id": 74, "label": "KAIHO MARU", "shape": "dot", "size": 5.651376146788991}, {"color": "#97c2fc", "id": 75, "label": "OSTROV IONY", "shape": "dot", "size": 5.651376146788991}, {"color": "#97c2fc", "id": 76, "label": "FU JYI", "shape": "dot", "size": 5.394495412844037}, {"color": "#97c2fc", "id": 77, "label": "HAI FENG 628", "shape": "dot", "size": 5.394495412844037}, {"color": "#97c2fc", "id": 78, "label": "ICE BREEZE", "shape": "dot", "size": 5.394495412844037}, {"color": "#97c2fc", "id": 79, "label": "SHIN HANG 6", "shape": "dot", "size": 5.3088685015290515}, {"color": "#97c2fc", "id": 81, "label": "GREEN TOLEDO", "shape": "dot", "size": 5.223241590214068}, {"color": "#97c2fc", "id": 82, "label": "HAI FENG 688", "shape": "dot", "size": 5.137614678899083}, {"color": "#97c2fc", "id": 83, "label": "HSIANG CHI CHUN@@@AU", "shape": "dot", "size": 5.137614678899083}, {"color": "#97c2fc", "id": 85, "label": "BUKHTA NATALII", "shape": "dot", "size": 5.137614678899083}, {"color": "#97c2fc", "id": 86, "label": "SHOTA MARU", "shape": "dot", "size": 5.051987767584098}, {"color": "#97c2fc", "id": 87, "label": "SL BOGO", "shape": "dot", "size": 5.051987767584098}, {"color": "#97c2fc", "id": 88, "label": "HAIFENG 895", "shape": "dot", "size": 5.051987767584098}, {"color": "#97c2fc", "id": 89, "label": "FONG QUN", "shape": "dot", "size": 5.051987767584098}, {"color": "#97c2fc", "id": 90, "label": "SHIN FUJI", "shape": "dot", "size": 4.966360856269113}, {"color": "#97c2fc", "id": 91, "label": "SILVER ICE", "shape": "dot", "size": 4.8807339449541285}]);
+                  edges = new vis.DataSet([{"from": 2, "to": 84, "width": 0.125}, {"from": 6, "to": 19, "width": 0.575}, {"from": 6, "to": 36, "width": 0.2}, {"from": 6, "to": 57, "width": 0.175}, {"from": 9, "to": 46, "width": 0.175}, {"from": 15, "to": 44, "width": 0.35}, {"from": 19, "to": 36, "width": 0.575}, {"from": 19, "to": 40, "width": 0.275}, {"from": 19, "to": 57, "width": 0.425}, {"from": 38, "to": 40, "width": 0.2}, {"from": 38, "to": 61, "width": 0.15}, {"from": 40, "to": 61, "width": 0.275}, {"from": 48, "to": 67, "width": 0.375}, {"from": 61, "to": 80, "width": 0.15}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

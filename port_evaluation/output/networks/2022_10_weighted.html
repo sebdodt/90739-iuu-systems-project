@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 0, "label": "KONDOR", "shape": "dot", "size": 28}, {"color": "#97c2fc", "id": 36, "label": "FU YUAN YU YUN 688", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 62, "label": "OSTROV SHIKOTAN", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 73, "label": "VICTOR GAVRILOV", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 101, "label": "FU YUAN YU YUN 995", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 1, "label": "REEFER", "shape": "dot", "size": 20}, {"color": "#97c2fc", "id": 13, "label": "HAI FENG 718", "shape": "dot", "size": 8}, {"color": "#97c2fc", "id": 45, "label": "FU YUAN YU YUN 991", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 110, "label": "CARMENCITA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 2, "label": "OBAYATELNYY", "shape": "dot", "size": 17}, {"color": "#97c2fc", "id": 43, "label": "NAGA MAS PERKASA 89", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 46, "label": "XINJILILENG6", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 47, "label": "TSAR", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 56, "label": "LURONGYUANYUYUN999", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 65, "label": "ASASHIOMARU", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 68, "label": "LURONGYUANYUYUN188", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 72, "label": "SHUN TIAN FA NO.168", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 77, "label": "HENG HONG 5", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 82, "label": "FU YUAN YU YUN 67", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 83, "label": "FU YUAN YU YUN 87", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 92, "label": "ANTARCTIC SEA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 109, "label": "SHIN HO CHUN NO.101", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 3, "label": "OSTROVNOY-7", "shape": "dot", "size": 16}, {"color": "#97c2fc", "id": 31, "label": "LURONGYUANYUYUN009", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 105, "label": "SHENG HONG", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 4, "label": "SOLID", "shape": "dot", "size": 16}, {"color": "#97c2fc", "id": 42, "label": "ANTARES", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 89, "label": "CHITOSE", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 90, "label": "WAN YANG", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 6, "label": "VLADIVOSTOK 2000", "shape": "dot", "size": 12}, {"color": "#97c2fc", "id": 7, "label": "MONERON", "shape": "dot", "size": 12}, {"color": "#97c2fc", "id": 11, "label": "ULTIMATE", "shape": "dot", "size": 9}, {"color": "#97c2fc", "id": 16, "label": "LARI", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 20, "label": "NING TAI LENG 2", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 21, "label": "NINGTAILENG8", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 25, "label": "HORISONT III", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 27, "label": "MEKHANIK S. AGAPOV", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 28, "label": "LURONGYUANYUYUN008", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 29, "label": "HE SHUN", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 30, "label": "LURONGYUANYUYUN668", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 38, "label": "YONG XIANG 9", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 44, "label": "FUYUANYUYUN877", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 58, "label": "SIVUCH", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 60, "label": "LURONGYUANYUYUN888", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 71, "label": "POMOR", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 79, "label": "BUKHTA NAGAEVA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 94, "label": "HAIJILI", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 100, "label": "CHEN YU NO.7", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 8, "label": "VSEVOLOD SIBIRTSEV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 107, "label": "LURONGYUANYUYUN777", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 9, "label": "LU RONG YUAN YU 586", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": 12, "label": "NISSHIN MARU", "shape": "dot", "size": 8}, {"color": "#97c2fc", "id": 24, "label": "SHUN ZE LENG 7", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 48, "label": "FU YUAN YU YUN 266", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 49, "label": "XIN HAI LENG 1", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 64, "label": "LURONGYUANYUYUN898", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 70, "label": "LYRA", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 102, "label": "FU YUAN YU LENG 36", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 108, "label": "NESLISAH 1", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 10, "label": "AGNES 83", "shape": "dot", "size": 9}, {"color": "#97c2fc", "id": 19, "label": "BANDAR NELAYAN 2017", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 69, "label": "HAN XING", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 59, "label": "FUTAGAMI", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 87, "label": "HAI FENG 698", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 91, "label": "GREEN TUNDRA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 14, "label": "QI HANG", "shape": "dot", "size": 8}, {"color": "#97c2fc", "id": 52, "label": "LURONGYUANYUYUN177", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 66, "label": "FULL KUO SHIN", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 106, "label": "PINGTAIRONGLENG2", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 15, "label": "WEI NING", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 32, "label": "YONG HANG 3", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 63, "label": "TAIHO MARU", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 17, "label": "ALCEDO", "shape": "dot", "size": 7}, {"color": "#97c2fc", "id": 53, "label": "FU YUAN YU LENG 222", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 39, "label": "TRITON REEFER", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 81, "label": "LAZURNYY", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 103, "label": "NO82KIYOMARU", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 23, "label": "YACHIYO", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 26, "label": "MING HANG 7", "shape": "dot", "size": 6}, {"color": "#97c2fc", "id": 33, "label": "LONNINGEN", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 78, "label": "YONG MAN SHUN", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 34, "label": "HUAXIANG8", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 61, "label": "LURONGYUANYUYUN998", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 74, "label": "HAI FENG 678", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 84, "label": "JIN ZHOU", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 104, "label": "NINGTAILENG7", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 35, "label": "BANDAR NELAYAN 271", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 96, "label": "TAISEI MARU NO15", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 40, "label": "NINGTAILENG5", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 99, "label": "ORION-1", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 41, "label": "SHEN  JU", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 85, "label": "SEIYU", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 50, "label": "XINHAILENG2", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 51, "label": "FU YUAN YU YUN 699", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 97, "label": "FU YUAN YU YUN 088", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 54, "label": "LURONGYUANYUYUN678", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 67, "label": "ALMASARA", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 55, "label": "DAPINGYUYUN99", "shape": "dot", "size": 4}, {"color": "#97c2fc", "id": 75, "label": "TENHO MARU", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 93, "label": "SIMFONIYA", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 98, "label": "FRIO OCEANIC", "shape": "dot", "size": 3}, {"color": "#97c2fc", "id": 5, "label": "KRYMSKIY", "shape": "dot", "size": 14.065934065934066}, {"color": "#97c2fc", "id": 18, "label": "SHUN ZE LENG 6", "shape": "dot", "size": 7.34065934065934}, {"color": "#97c2fc", "id": 22, "label": "ZHONG JU LENG1", "shape": "dot", "size": 7.032967032967033}, {"color": "#97c2fc", "id": 37, "label": "HE TAI", "shape": "dot", "size": 5.538461538461538}, {"color": "#97c2fc", "id": 57, "label": "ZALIV PROSTOR", "shape": "dot", "size": 4.571428571428571}, {"color": "#97c2fc", "id": 76, "label": "SHUN HANG", "shape": "dot", "size": 3.956043956043956}, {"color": "#97c2fc", "id": 80, "label": "HARIMA", "shape": "dot", "size": 3.8681318681318677}, {"color": "#97c2fc", "id": 86, "label": "IBUKI", "shape": "dot", "size": 3.6923076923076925}, {"color": "#97c2fc", "id": 88, "label": "ALNAEMA", "shape": "dot", "size": 3.6483516483516483}, {"color": "#97c2fc", "id": 95, "label": "BAO WIN", "shape": "dot", "size": 3.3846153846153846}, {"color": "#97c2fc", "id": 111, "label": "OSTROV ITURUP", "shape": "dot", "size": 3.164835164835165}, {"color": "#97c2fc", "id": 112, "label": "BAO REEFER", "shape": "dot", "size": 3.120879120879121}]);
+                  edges = new vis.DataSet([{"from": 0, "to": 36, "width": 0.8}, {"from": 0, "to": 62, "width": 0.25}, {"from": 0, "to": 73, "width": 0.6}, {"from": 0, "to": 101, "width": 0.575}, {"from": 1, "to": 13, "width": 0.8}, {"from": 1, "to": 45, "width": 0.65}, {"from": 1, "to": 110, "width": 0.525}, {"from": 2, "to": 43, "width": 0.55}, {"from": 2, "to": 46, "width": 2.025}, {"from": 2, "to": 47, "width": 1.325}, {"from": 2, "to": 56, "width": 0.175}, {"from": 2, "to": 65, "width": 0.35}, {"from": 2, "to": 68, "width": 0.75}, {"from": 2, "to": 72, "width": 0.225}, {"from": 2, "to": 77, "width": 1.45}, {"from": 2, "to": 82, "width": 1.125}, {"from": 2, "to": 83, "width": 1.2}, {"from": 2, "to": 92, "width": 0.35}, {"from": 2, "to": 109, "width": 0.575}, {"from": 3, "to": 31, "width": 1.9}, {"from": 3, "to": 105, "width": 2.25}, {"from": 4, "to": 42, "width": 0.3}, {"from": 4, "to": 89, "width": 0.35}, {"from": 4, "to": 90, "width": 0.275}, {"from": 6, "to": 42, "width": 0.45}, {"from": 6, "to": 89, "width": 0.325}, {"from": 6, "to": 90, "width": 0.4}, {"from": 7, "to": 11, "width": 1.025}, {"from": 7, "to": 16, "width": 0.375}, {"from": 7, "to": 20, "width": 1.3}, {"from": 7, "to": 21, "width": 0.375}, {"from": 7, "to": 25, "width": 1.3}, {"from": 7, "to": 27, "width": 0.775}, {"from": 7, "to": 28, "width": 0.225}, {"from": 7, "to": 29, "width": 1.425}, {"from": 7, "to": 30, "width": 2.275}, {"from": 7, "to": 38, "width": 0.375}, {"from": 7, "to": 44, "width": 0.275}, {"from": 7, "to": 58, "width": 0.225}, {"from": 7, "to": 60, "width": 0.425}, {"from": 7, "to": 71, "width": 0.575}, {"from": 7, "to": 79, "width": 0.4}, {"from": 7, "to": 94, "width": 0.325}, {"from": 7, "to": 100, "width": 1.425}, {"from": 8, "to": 107, "width": 2.45}, {"from": 9, "to": 12, "width": 0.375}, {"from": 9, "to": 21, "width": 0.55}, {"from": 9, "to": 24, "width": 0.7}, {"from": 9, "to": 27, "width": 0.425}, {"from": 9, "to": 28, "width": 0.375}, {"from": 9, "to": 38, "width": 0.325}, {"from": 9, "to": 44, "width": 0.4}, {"from": 9, "to": 48, "width": 0.6}, {"from": 9, "to": 49, "width": 0.25}, {"from": 9, "to": 58, "width": 0.925}, {"from": 9, "to": 60, "width": 0.5}, {"from": 9, "to": 64, "width": 0.275}, {"from": 9, "to": 70, "width": 0.675}, {"from": 9, "to": 71, "width": 0.825}, {"from": 9, "to": 77, "width": 0.275}, {"from": 9, "to": 94, "width": 0.9}, {"from": 9, "to": 102, "width": 0.35}, {"from": 9, "to": 108, "width": 0.875}, {"from": 10, "to": 19, "width": 0.625}, {"from": 10, "to": 68, "width": 0.425}, {"from": 10, "to": 69, "width": 0.45}, {"from": 10, "to": 83, "width": 0.4}, {"from": 11, "to": 21, "width": 0.275}, {"from": 11, "to": 27, "width": 1.1}, {"from": 11, "to": 59, "width": 0.975}, {"from": 11, "to": 79, "width": 0.85}, {"from": 11, "to": 87, "width": 0.45}, {"from": 11, "to": 91, "width": 0.3}, {"from": 12, "to": 19, "width": 0.375}, {"from": 12, "to": 20, "width": 0.25}, {"from": 12, "to": 24, "width": 0.875}, {"from": 12, "to": 58, "width": 0.9}, {"from": 12, "to": 69, "width": 0.3}, {"from": 12, "to": 70, "width": 0.325}, {"from": 12, "to": 71, "width": 0.325}, {"from": 12, "to": 83, "width": 0.35}, {"from": 12, "to": 94, "width": 0.475}, {"from": 12, "to": 102, "width": 0.25}, {"from": 12, "to": 108, "width": 0.275}, {"from": 13, "to": 45, "width": 1.05}, {"from": 13, "to": 110, "width": 0.525}, {"from": 14, "to": 52, "width": 0.55}, {"from": 14, "to": 66, "width": 0.5}, {"from": 14, "to": 106, "width": 0.5}, {"from": 15, "to": 21, "width": 0.425}, {"from": 15, "to": 32, "width": 0.275}, {"from": 15, "to": 63, "width": 0.3}, {"from": 15, "to": 65, "width": 0.45}, {"from": 15, "to": 70, "width": 0.225}, {"from": 15, "to": 71, "width": 0.225}, {"from": 15, "to": 72, "width": 0.275}, {"from": 16, "to": 20, "width": 0.775}, {"from": 16, "to": 25, "width": 0.875}, {"from": 16, "to": 29, "width": 0.4}, {"from": 16, "to": 30, "width": 1.075}, {"from": 16, "to": 63, "width": 0.225}, {"from": 16, "to": 65, "width": 0.275}, {"from": 16, "to": 100, "width": 0.375}, {"from": 17, "to": 32, "width": 0.275}, {"from": 17, "to": 53, "width": 0.2}, {"from": 17, "to": 59, "width": 1.625}, {"from": 17, "to": 87, "width": 0.575}, {"from": 17, "to": 91, "width": 0.4}, {"from": 19, "to": 69, "width": 0.7}, {"from": 19, "to": 83, "width": 0.75}, {"from": 20, "to": 21, "width": 0.275}, {"from": 20, "to": 24, "width": 0.625}, {"from": 20, "to": 25, "width": 1.95}, {"from": 20, "to": 28, "width": 0.375}, {"from": 20, "to": 29, "width": 1.325}, {"from": 20, "to": 30, "width": 3.3}, {"from": 20, "to": 38, "width": 0.3}, {"from": 20, "to": 58, "width": 0.6}, {"from": 20, "to": 71, "width": 0.35}, {"from": 20, "to": 94, "width": 0.75}, {"from": 20, "to": 100, "width": 1.65}, {"from": 20, "to": 108, "width": 0.5}, {"from": 21, "to": 27, "width": 0.825}, {"from": 21, "to": 29, "width": 0.5}, {"from": 21, "to": 30, "width": 0.425}, {"from": 21, "to": 38, "width": 0.45}, {"from": 21, "to": 39, "width": 0.35}, {"from": 21, "to": 48, "width": 0.65}, {"from": 21, "to": 49, "width": 0.725}, {"from": 21, "to": 58, "width": 0.55}, {"from": 21, "to": 63, "width": 0.55}, {"from": 21, "to": 64, "width": 0.3}, {"from": 21, "to": 65, "width": 0.6}, {"from": 21, "to": 71, "width": 0.425}, {"from": 21, "to": 77, "width": 0.4}, {"from": 21, "to": 81, "width": 1.225}, {"from": 21, "to": 94, "width": 0.25}, {"from": 21, "to": 100, "width": 0.225}, {"from": 21, "to": 103, "width": 0.95}, {"from": 21, "to": 108, "width": 0.3}, {"from": 23, "to": 64, "width": 0.675}, {"from": 23, "to": 102, "width": 0.775}, {"from": 24, "to": 28, "width": 0.8}, {"from": 24, "to": 58, "width": 2.0}, {"from": 24, "to": 70, "width": 1.175}, {"from": 24, "to": 94, "width": 1.65}, {"from": 24, "to": 102, "width": 1.025}, {"from": 24, "to": 108, "width": 0.825}, {"from": 25, "to": 28, "width": 0.3}, {"from": 25, "to": 29, "width": 1.5}, {"from": 25, "to": 30, "width": 3.725}, {"from": 25, "to": 58, "width": 0.25}, {"from": 25, "to": 60, "width": 0.4}, {"from": 25, "to": 94, "width": 0.55}, {"from": 25, "to": 100, "width": 1.65}, {"from": 26, "to": 52, "width": 0.25}, {"from": 26, "to": 66, "width": 0.825}, {"from": 26, "to": 106, "width": 0.65}, {"from": 27, "to": 30, "width": 0.275}, {"from": 27, "to": 48, "width": 0.425}, {"from": 27, "to": 60, "width": 0.25}, {"from": 27, "to": 79, "width": 1.05}, {"from": 27, "to": 81, "width": 0.9}, {"from": 27, "to": 103, "width": 0.45}, {"from": 28, "to": 30, "width": 0.375}, {"from": 28, "to": 38, "width": 0.425}, {"from": 28, "to": 44, "width": 1.95}, {"from": 28, "to": 58, "width": 1.025}, {"from": 28, "to": 64, "width": 0.25}, {"from": 28, "to": 65, "width": 0.3}, {"from": 28, "to": 70, "width": 0.775}, {"from": 28, "to": 71, "width": 1.325}, {"from": 28, "to": 94, "width": 3.7}, {"from": 28, "to": 102, "width": 0.35}, {"from": 28, "to": 108, "width": 0.6}, {"from": 29, "to": 30, "width": 2.475}, {"from": 29, "to": 58, "width": 0.25}, {"from": 29, "to": 94, "width": 0.2}, {"from": 29, "to": 100, "width": 1.2}, {"from": 30, "to": 38, "width": 0.575}, {"from": 30, "to": 44, "width": 0.5}, {"from": 30, "to": 58, "width": 0.4}, {"from": 30, "to": 65, "width": 0.35}, {"from": 30, "to": 71, "width": 0.75}, {"from": 30, "to": 94, "width": 0.9}, {"from": 30, "to": 100, "width": 3.05}, {"from": 31, "to": 105, "width": 2.3}, {"from": 32, "to": 59, "width": 0.2}, {"from": 32, "to": 65, "width": 0.275}, {"from": 33, "to": 78, "width": 3.35}, {"from": 34, "to": 61, "width": 0.35}, {"from": 34, "to": 74, "width": 0.675}, {"from": 34, "to": 84, "width": 0.825}, {"from": 34, "to": 104, "width": 0.8}, {"from": 35, "to": 96, "width": 0.725}, {"from": 36, "to": 62, "width": 0.275}, {"from": 36, "to": 73, "width": 0.525}, {"from": 36, "to": 101, "width": 0.45}, {"from": 38, "to": 44, "width": 0.475}, {"from": 38, "to": 58, "width": 1.675}, {"from": 38, "to": 60, "width": 1.05}, {"from": 38, "to": 64, "width": 0.275}, {"from": 38, "to": 65, "width": 0.55}, {"from": 38, "to": 70, "width": 1.2}, {"from": 38, "to": 71, "width": 4.95}, {"from": 38, "to": 94, "width": 0.9}, {"from": 38, "to": 102, "width": 0.45}, {"from": 39, "to": 46, "width": 0.3}, {"from": 39, "to": 49, "width": 0.25}, {"from": 39, "to": 77, "width": 0.275}, {"from": 39, "to": 82, "width": 0.25}, {"from": 39, "to": 83, "width": 0.25}, {"from": 40, "to": 99, "width": 0.85}, {"from": 41, "to": 73, "width": 0.3}, {"from": 41, "to": 96, "width": 0.5}, {"from": 42, "to": 89, "width": 1.075}, {"from": 42, "to": 90, "width": 1.075}, {"from": 43, "to": 46, "width": 0.275}, {"from": 43, "to": 56, "width": 0.175}, {"from": 43, "to": 64, "width": 0.25}, {"from": 43, "to": 77, "width": 0.35}, {"from": 43, "to": 82, "width": 0.375}, {"from": 43, "to": 83, "width": 0.25}, {"from": 44, "to": 58, "width": 0.475}, {"from": 44, "to": 60, "width": 0.425}, {"from": 44, "to": 70, "width": 0.775}, {"from": 44, "to": 71, "width": 0.675}, {"from": 44, "to": 94, "width": 2.8}, {"from": 44, "to": 108, "width": 0.35}, {"from": 45, "to": 52, "width": 0.45}, {"from": 45, "to": 85, "width": 0.625}, {"from": 45, "to": 110, "width": 0.45}, {"from": 46, "to": 47, "width": 1.0}, {"from": 46, "to": 50, "width": 0.475}, {"from": 46, "to": 65, "width": 0.425}, {"from": 46, "to": 77, "width": 1.175}, {"from": 46, "to": 82, "width": 0.775}, {"from": 46, "to": 83, "width": 0.825}, {"from": 46, "to": 109, "width": 1.125}, {"from": 47, "to": 77, "width": 0.525}, {"from": 47, "to": 82, "width": 0.4}, {"from": 47, "to": 83, "width": 0.475}, {"from": 47, "to": 109, "width": 0.6}, {"from": 48, "to": 49, "width": 0.25}, {"from": 48, "to": 51, "width": 0.225}, {"from": 48, "to": 60, "width": 0.95}, {"from": 48, "to": 71, "width": 0.525}, {"from": 48, "to": 77, "width": 0.55}, {"from": 48, "to": 97, "width": 0.225}, {"from": 48, "to": 108, "width": 0.675}, {"from": 49, "to": 65, "width": 0.25}, {"from": 49, "to": 71, "width": 0.2}, {"from": 49, "to": 77, "width": 0.375}, {"from": 49, "to": 108, "width": 1.5}, {"from": 50, "to": 109, "width": 1.175}, {"from": 52, "to": 66, "width": 0.7}, {"from": 54, "to": 67, "width": 1.7}, {"from": 55, "to": 67, "width": 2.875}, {"from": 55, "to": 75, "width": 3.475}, {"from": 55, "to": 78, "width": 0.375}, {"from": 58, "to": 60, "width": 0.4}, {"from": 58, "to": 64, "width": 0.55}, {"from": 58, "to": 65, "width": 0.575}, {"from": 58, "to": 70, "width": 2.35}, {"from": 58, "to": 71, "width": 2.75}, {"from": 58, "to": 83, "width": 0.375}, {"from": 58, "to": 94, "width": 1.85}, {"from": 58, "to": 102, "width": 0.725}, {"from": 58, "to": 108, "width": 0.675}, {"from": 59, "to": 87, "width": 2.175}, {"from": 59, "to": 91, "width": 2.275}, {"from": 60, "to": 70, "width": 0.525}, {"from": 60, "to": 71, "width": 2.2}, {"from": 60, "to": 79, "width": 0.275}, {"from": 60, "to": 94, "width": 0.35}, {"from": 60, "to": 108, "width": 1.1}, {"from": 61, "to": 74, "width": 0.7}, {"from": 61, "to": 84, "width": 0.975}, {"from": 61, "to": 104, "width": 0.475}, {"from": 63, "to": 65, "width": 1.025}, {"from": 63, "to": 70, "width": 0.2}, {"from": 63, "to": 71, "width": 0.175}, {"from": 63, "to": 87, "width": 0.375}, {"from": 63, "to": 92, "width": 0.225}, {"from": 64, "to": 65, "width": 0.325}, {"from": 64, "to": 70, "width": 0.65}, {"from": 64, "to": 71, "width": 0.65}, {"from": 64, "to": 94, "width": 0.275}, {"from": 64, "to": 102, "width": 0.9}, {"from": 64, "to": 108, "width": 0.25}, {"from": 65, "to": 70, "width": 0.375}, {"from": 65, "to": 71, "width": 0.85}, {"from": 65, "to": 92, "width": 0.425}, {"from": 65, "to": 94, "width": 0.3}, {"from": 66, "to": 106, "width": 0.875}, {"from": 67, "to": 75, "width": 2.225}, {"from": 67, "to": 78, "width": 0.35}, {"from": 68, "to": 72, "width": 0.4}, {"from": 68, "to": 77, "width": 0.2}, {"from": 69, "to": 82, "width": 0.3}, {"from": 69, "to": 83, "width": 0.8}, {"from": 70, "to": 71, "width": 2.45}, {"from": 70, "to": 94, "width": 1.55}, {"from": 70, "to": 102, "width": 0.725}, {"from": 70, "to": 108, "width": 0.45}, {"from": 71, "to": 83, "width": 0.65}, {"from": 71, "to": 94, "width": 1.325}, {"from": 71, "to": 100, "width": 0.3}, {"from": 71, "to": 102, "width": 0.8}, {"from": 71, "to": 108, "width": 0.275}, {"from": 73, "to": 101, "width": 1.65}, {"from": 74, "to": 84, "width": 1.325}, {"from": 74, "to": 104, "width": 0.9}, {"from": 77, "to": 82, "width": 0.6}, {"from": 77, "to": 83, "width": 0.575}, {"from": 77, "to": 97, "width": 0.45}, {"from": 77, "to": 109, "width": 0.575}, {"from": 79, "to": 81, "width": 0.675}, {"from": 79, "to": 94, "width": 0.2}, {"from": 79, "to": 103, "width": 0.425}, {"from": 81, "to": 103, "width": 2.15}, {"from": 82, "to": 83, "width": 0.9}, {"from": 84, "to": 104, "width": 1.85}, {"from": 84, "to": 107, "width": 0.2}, {"from": 87, "to": 91, "width": 0.725}, {"from": 89, "to": 90, "width": 0.825}, {"from": 91, "to": 97, "width": 0.725}, {"from": 93, "to": 98, "width": 4.85}, {"from": 94, "to": 100, "width": 0.325}, {"from": 94, "to": 102, "width": 0.725}, {"from": 94, "to": 108, "width": 0.65}, {"from": 102, "to": 108, "width": 0.225}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

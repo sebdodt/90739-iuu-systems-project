@@ -35,7 +35,7 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
         G.add_node(
             i, 
             label=top_100_names.reset_index(drop=True)[i],
-            size=n_loitering/max(n_loitering) * 28)
+            size=n_loitering[i]/max(n_loitering) * 28)
     for i in ship_idx:
         for j in ship_idx:
             if i > j:
@@ -43,7 +43,7 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
                     G.add_edge(i,j,weight=(E[i,j]+E[j,i])/40)
     net = Network(notebook=False)
     net.from_nx(G)
-    net.show('port_evaluation/output/networks/{name}.html'.format(name=name))
+    net.show('port_evaluation/output/networks/{name}_weighted.html'.format(name=name))
 
 if __name__=='__main__':
     encounters = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/encounters.csv')
@@ -51,15 +51,14 @@ if __name__=='__main__':
     port_visits = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/port_visit.csv')
     mmsi = pd.read_csv('/Users/sebastiandodt/Desktop/final table (1).csv')
 
-    print(len)
-
-    for year in range(2012,2023):
-        for edge_threshold in [5, 10, 50, 100]:
+    for year in [2022]: #range(2012,2023):
+        for edge_threshold in [14]:# [11,12,13,14,15,16,17,18,19]:# [5, 7, 10, 20]:
             print(" > Generating network for {year} and thre. {t}...".format(year=year, t=edge_threshold))
             start = '{year}-01-01'.format(year=year)
             end = '{year}-12-31'.format(year=year)
-            top_n = 140
-            # edge_threshold = 7
-            name = '{year}_{t}'.format(year=year, t=edge_threshold)
-            make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loitering)
+            for top_n in [50,100,120,140,160]:
+                # top_n = 140
+                # edge_threshold = 7
+                name = '{year}_{t}_{n}'.format(year=year, t=edge_threshold, n=top_n)
+                make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loitering)
     print(" > Done.")
