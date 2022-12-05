@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": 1, "label": "Yong Hang 3", "shape": "dot", "size": 30}, {"color": "grey", "id": 412420228, "label": "HONG RUN 1", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420242, "label": "HUA YING 261", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420251, "label": "PU YUAN 827", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420255, "label": "PU YUAN 877", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420431, "label": "JIN HAI 878", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420455, "label": "HONGRUN75", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420468, "label": "NING TAI 19", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420493, "label": "PU YUAN 856", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420561, "label": "HANYI8", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420563, "label": "HAN YI 3", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420581, "label": "RUNDA618", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420797, "label": "HUA    YING   2O1", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420806, "label": "PUYUAN768", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420822, "label": "HUALI17", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420933, "label": "NING TAI 77", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420934, "label": "NINGTAI37", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420951, "label": "HONG RUN 16", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420958, "label": "MINGZHOU622", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420996, "label": "JIN HAI 717", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421006, "label": "HONG RUN 68", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421007, "label": "HONG RUN 668", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421019, "label": "GANG TAI 8", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421173, "label": "HENG_XIN_15", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421176, "label": "TAOYUAN605", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421191, "label": "ZHOU PU  5", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422122, "label": "DONG ZHOU 22", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422694, "label": "HUAYING817", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422701, "label": "HUAYING818", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422704, "label": "HUA YING 819", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549035, "label": "HENGXIN68", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549047, "label": "H0NG PU 7", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549065, "label": "ZHOU PU 668", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549097, "label": "HONG_PU_17", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549112, "label": "ZHE PU YUAN 77", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549113, "label": "HANYI 23", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549162, "label": "SHUNZE811", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549218, "label": "YING HAI 798", "shape": "dot", "size": 5}, {"color": "#97c2fc", "id": 39, "label": "Lurong Yuan Yu Yun", "shape": "dot", "size": 30}, {"color": "grey", "id": 412420798, "label": "HUA YING 205", "shape": "dot", "size": 5}, {"color": "grey", "id": 412331209, "label": "LU RONG YUAN YU 883", "shape": "dot", "size": 5}, {"color": "grey", "id": 412331200, "label": "LU RONG YUAN YU 882", "shape": "dot", "size": 5}, {"color": "grey", "id": 412329696, "label": "LU RONG YUAN YU 898", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421178, "label": "SHUNZE75", "shape": "dot", "size": 5}, {"color": "grey", "id": 412331016, "label": "LU RONG YUAN YU 819", "shape": "dot", "size": 5}, {"color": "grey", "id": 412331067, "label": "LURONGYUANYU801", "shape": "dot", "size": 5}, {"color": "grey", "id": 412331066, "label": "LU RONG YUAN YU 897", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421145, "label": "SHUNZE86", "shape": "dot", "size": 5}, {"color": "grey", "id": 412333655, "label": "LULANYUANYU 059", "shape": "dot", "size": 5}, {"color": "grey", "id": 412331015, "label": "LU RONG YUAN YU 818", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422693, "label": "HUAYING809", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420994, "label": "HAI FENG LONG 2", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420536, "label": "PU YUAN 826", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549053, "label": "HAI FENG LONG 5", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420959, "label": "JIN HAI 715", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420288, "label": "PU YUAN 811", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420466, "label": "PUYUAN887", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549052, "label": "HAI FENG LONG 6", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421171, "label": "HENG XIN1", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420912, "label": "ZHOU YU 8", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422696, "label": "HUAYING811", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421143, "label": "SHUN ZE 98", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421038, "label": "ZHOU YU 915", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549318, "label": "ZHOU YU 928", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549315, "label": "ZHOU YU 925", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421037, "label": "ZHOU YU 916", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420697, "label": "NINGTAI3", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420799, "label": "HUA YING 209", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421152, "label": "JU LONG JIA YA 14", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421183, "label": "TAOYUAN610", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549119, "label": "RUN DA 25", "shape": "dot", "size": 5}, {"color": "grey", "id": 412402273, "label": "HAN YI 788", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420471, "label": "SHUN ZE  87", "shape": "dot", "size": 5}, {"color": "grey", "id": 412421086, "label": "HUAYING208", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549083, "label": "ZHOU YU 919", "shape": "dot", "size": 5}, {"color": "grey", "id": 412549319, "label": "ZHOU YU 929", "shape": "dot", "size": 5}, {"color": "grey", "id": 412439575, "label": "HAIZHIXING8O1", "shape": "dot", "size": 5}, {"color": "grey", "id": 412420472, "label": "MING ZHOU 8", "shape": "dot", "size": 5}, {"color": "grey", "id": 412422352, "label": "SHUNZHOU811", "shape": "dot", "size": 5}]);
+                  edges = new vis.DataSet([{"color": "lightgrey", "from": 1, "to": 412420228, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420242, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420251, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420255, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420431, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420455, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420468, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420493, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420561, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420563, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420581, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420797, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420806, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420822, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420933, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420934, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420951, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420958, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412420996, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412421006, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412421007, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412421019, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412421173, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412421176, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412421191, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412422122, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412422694, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412422701, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412422704, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549035, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549047, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549065, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549097, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549112, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549113, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549162, "width": 1}, {"color": "lightgrey", "from": 1, "to": 412549218, "width": 1}, {"color": "lightgrey", "from": 412420933, "to": 39, "width": 1}, {"color": "lightgrey", "from": 412420996, "to": 39, "width": 1}, {"color": "lightgrey", "from": 412422122, "to": 39, "width": 1}, {"color": "lightgrey", "from": 412422694, "to": 39, "width": 1}, {"color": "lightgrey", "from": 412422704, "to": 39, "width": 1}, {"color": "lightgrey", "from": 412549035, "to": 39, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420798, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412331209, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412331200, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412329696, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421178, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412331016, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412331067, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412331066, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421145, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412333655, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412331015, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412422693, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420994, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420536, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549053, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420959, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420288, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420466, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549052, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421171, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420912, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412422696, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421143, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421038, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549318, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549315, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421037, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420697, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420799, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421152, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421183, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549119, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412402273, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420471, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412421086, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549083, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412549319, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412439575, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412420472, "width": 1}, {"color": "lightgrey", "from": 39, "to": 412422352, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
