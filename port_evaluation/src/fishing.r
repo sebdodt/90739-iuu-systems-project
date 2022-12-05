@@ -82,14 +82,17 @@ f11 %>%
 
 View(head(f11))
 
+countries <- read.csv('port_evaluation/data/input/regions/iso3.csv')
+
 eezs <- data.frame()
-for (country in c('CHL', 'PER', 'ECU')) {
-    eez_new <- get_region_id(
+for (country in countries$iso3) {
+    eez_new <- gfwr::get_region_id(
         region_name = country,
         region_source = 'eez',
         key = GFW_TOKEN)
     eezs <- rbind(eezs, eez_new)
 }
+write.csv(eezs,'port_evaluation/data/input/regions/iso3_eez.csv')
 
 fishing <- data.frame()
 for (year in 2012:2022) {
