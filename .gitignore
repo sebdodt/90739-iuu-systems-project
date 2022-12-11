@@ -135,6 +135,7 @@ dmypy.json
 # Seb
 seb_readme.md
 *playground.r
+*.png
 
 # Data
 *data/
