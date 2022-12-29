@@ -113,6 +113,20 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
     dmax = max(degree_sequence)
     networks = sorted(nx.connected_components(G), key=len, reverse=True)
 
+    chinese = [
+        'China National Fisheries Corporation',
+        'Wei Fong Shipping Co Ltd',
+        'Pingtairong Ocean Fishery',
+        'Zhoushan Ningtai Ocean Fish',
+        'Pingtan Marine Enterprise Ltd',
+        'Fujian Gangshun Pelagi',
+        'Zhoushan Zhongju Ocean',
+        'Rongcheng Marine Fishery Co',
+        'Rongcheng East China Fisheries',
+        'Zhoushan Haili Ocean Fisheries'
+        ]
+
+
     for i_net in range(len(networks)):
         if len(networks[i_net]) >= 4:
             fig = plt.figure("Degree of a random graph", figsize=(10.7, 6))
