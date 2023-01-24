@@ -184,7 +184,7 @@ if __name__=='__main__':
     encounters = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/encounters.csv')
     loitering = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/loitering.csv')
     port_visits = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/port_visit.csv')
-    mmsi = pd.read_csv('/Users/sebastiandodt/Desktop/final table (1).csv')
+    mmsi = pd.read_csv('port_evaluation/eda/midterm/1_reefers/summary_table.csv')
     sv = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/seavision/lists-Reefers-2022-11-11_04-40.csv')
     not_reefer = sv.loc[sv['Vessel Type'] == '30-Fishing','MMSI']
     
