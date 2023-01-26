@@ -26,3 +26,21 @@ This repo is structured in the following way
 The code for the network graphs is at:
 
 `port_evaluation/eda/midterm/1_reefers/network.py`
+
+
+## Data
+
+There are two data folders that we used. One for the general analysis and one for the backend pipeline. We should probably go through them together in case you want to use any of them. They are not synced to github because of their size.
+
+You can download the folders here:
+
+1. Pipeline
+
+Download from https://1drv.ms/u/s!ArdJVZgdFDvWkYFK58HFgklnVo0gCA?e=xMo9Lx
+Place in `pipeline/data`
+
+
+2. Analysis
+
+Download from https://1drv.ms/u/s!ArdJVZgdFDvWkPAgEZXndBC8xspp2Q?e=lfQFcc
+Place in `port_evaluation/data`
