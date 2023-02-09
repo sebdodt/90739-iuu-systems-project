@@ -59,7 +59,7 @@ def data_port(mmsis, port_visits):
     return grouped
 
 
-def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loitering, port_visits):
+def make_plot(name, start, end, top_n, edge_threshold, encounters, loitering, port_visits):
 
     # filter respective time period
     loitering = loitering.loc[loitering['start'] >= start,:]
@@ -71,10 +71,10 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
     loitered_grouped = loitering.groupby(['vessel.mmsi'])['id'] \
         .count().reset_index() \
         .rename({'id':'loitering', 'vessel.mmsi':'mmsi'}, axis=1) \
-        .sort_values('loitering', ascending=False, inplace=True)
+        .sort_values('loitering', ascending=False, inplace=False)
     
     # filter top n number of vessels
-    top_100_loiterers = loitered_grouped['mmsi'].head(top_n)
+    top_100_loiterers = loitered_grouped['mmsi'].head(top_n) # look into imo
 
     # take log of loitering to make points in graph more similar of size
     n_loitering = np.log(loitered_grouped['loitering'].head(top_n).reset_index(drop=True))
@@ -118,7 +118,7 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
         for j in ship_idx:
             if i > j:
                 if (E[i,j]) >= edge_threshold:
-                    if (E[i,j]) >= edge_threshold:
+                    if (E[j,i]) >= edge_threshold:
                         G.add_edge(i,j,weight=(E[i,j]+E[j,i])/40)
     net = Network(notebook=False)
     net.from_nx(G)
@@ -203,28 +203,33 @@ def make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loiteri
             ax2.set_ylabel("# of Port Visits in {year}".format(year=start[:4]))
             ax2.set_xlabel('')
             fig.tight_layout()
-            plt.rcParams['savefig.transparent'] = True
+
+            # save plot
+            plt.rcParams['savefig.transparent'] = True # make background transparent
             plt.savefig('port_evaluation/output/networks/9 feb/{name}_{i}.png'.format(name=name, i=i_net+1), dpi=800)
             plt.clf()
 
 
 if __name__=='__main__':
+    # read in the data
     encounters = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/encounters.csv')
     loitering = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/loitering.csv')
     port_visits = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/unified/port_visit.csv')
-    mmsi = pd.read_csv('port_evaluation/eda/midterm/1_reefers/summary_table.csv')
+
+    # reading seavision
     sv = pd.read_csv('/Users/sebastiandodt/OneDrive/Uni/Carnegie Mellon University/Modules/2022 Fall/Systems Project/Coding/90739-iuu-systems-project/pipeline/data/seavision/lists-Reefers-2022-11-11_04-40.csv')
-    not_reefer = sv.loc[sv['Vessel Type'] == '30-Fishing','MMSI']
     
+    # filter out all the fishing boats
+    not_reefer = sv.loc[sv['Vessel Type'] == '30-Fishing','MMSI']
     encounters.loc[~(encounters['vessel.mmsi'].isin(not_reefer)),:]
     loitering.loc[~(loitering['vessel.mmsi'].isin(not_reefer)),:]
     port_visits.loc[~(port_visits['vessel_ssvid'].isin(not_reefer)),:]
 
 
     # parameters 
-    years = [2022] #range(2012,2023):
-    edge_thresholds = [20]
-    top_n_filtered = [130]
+    years = [2021, 2022] #range(2012,2023):
+    edge_thresholds = [20] 
+    top_n_filtered = [130] # with the most loitering (you may want do encounter+loitering)
 
     for year in years: 
         for edge_threshold in edge_thresholds:
@@ -233,5 +238,5 @@ if __name__=='__main__':
             end = '{year}-12-31'.format(year=year)
             for top_n in top_n_filtered:
                 name = '{year}_{t}_{n}'.format(year=year, t=edge_threshold, n=top_n)
-                make_plot(name, start, end, top_n, edge_threshold, encounters, mmsi, loitering, port_visits)
+                make_plot(name, start, end, top_n, edge_threshold, encounters, loitering, port_visits)
     print(" > Done.")
